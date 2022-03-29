@@ -2,6 +2,7 @@ from contextvars import ContextVar
 from typing import Any
 
 from sanic import Request, Sanic
+from myproject.ddd.south.adapter.repository import orm
 
 app = Sanic.get_app()
 
@@ -10,6 +11,8 @@ app = Sanic.get_app()
 async def setup_request_context(app: Sanic, _) -> None:
     # 注入 request 值，方便 log 模块登记 request.id 进行链路跟踪
     app.ctx.request = ContextVar("request")
+
+    orm.start_mappers()
 
 
 @app.on_request

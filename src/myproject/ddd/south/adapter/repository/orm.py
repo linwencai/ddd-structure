@@ -2,7 +2,8 @@ import datetime
 from email.policy import default
 from sqlalchemy import Table, Column, Integer, String, ForeignKey, DateTime, Boolean
 from sqlalchemy import func
-from sqlalchemy.orm  import relationship, declarative_base
+from sqlalchemy.orm import mapper, relationship, declarative_base
+from myproject.ddd.domain import model
 
 Base = declarative_base()
 
@@ -21,3 +22,10 @@ class Cluster(Base):
             "id" : self.id,
             "name" : self.name
         }
+
+
+def start_mappers():
+    mapper(
+        model.Cluster,
+        Cluster,
+    )
