@@ -49,14 +49,14 @@ settings.toml 中的 secret_key， 内部代码封装是，会自动生成 encod
 #### encode_secret_key 生成命令
 
 ```bash
-cd src/myproject/common
+cd src/myproject/core/common
 python crypto.py -a generate -d 'YOUR_SECRET_KEY'
 ```
 
 #### 加密命令
 
 ```bash
-cd src/myproject/common
+cd src/myproject/core/common
 python crypto.py -a encrypt -d 'YOUR_NEED_ENCRYPT_DATA' -k 'YOUR_SECRET_KEY'
 
 ```
@@ -64,7 +64,7 @@ python crypto.py -a encrypt -d 'YOUR_NEED_ENCRYPT_DATA' -k 'YOUR_SECRET_KEY'
 #### 解密命令
 
 ```bash
-cd src/myproject/common
+cd src/myproject/core/common
 python crypto.py -a decrypt -d 'YOUR_ENCRYPTED_DATA' -k 'YOUR_SECRET_KEY'
 ```
 

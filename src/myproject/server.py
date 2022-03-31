@@ -1,29 +1,28 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from fileinput import filename
 from pathlib import Path
 from typing import Optional, Sequence, Tuple
-from wsgiref.util import request_uri
 
 from sanic import Sanic
-from sanic.response import json, file
+from sanic.response import json
 # Modules imported here should NOT have a Sanic.get_app() call in the global
 # scope. Doing so will cause a circular import. Therefore, we programmatically
 # import those modules inside the create_app() factory.
 
 # from myproject.common.csrf import setup_csrf
-from myproject.common.log import setup_logging
-from myproject.dependency.module import setup_modules
-from myproject.dependency.request import CustomRequest
+from myproject.core.common.log import setup_logging
+from myproject.core.module.module import setup_modules
+from myproject.core.common.request_id import CustomRequest
 from myproject.config import APP_CONFIG, SANIC_CONFIG
 
 APPNAME = APP_CONFIG['APP']
 
 DEFAULT: Tuple[str, ...] = (
     "myproject.urls",
-    "myproject.middleware.request_context",
-    "myproject.dependency.orm",
-    # "myproject.dependency.redis",
+    "myproject.core.common.context",
+    "myproject.core.module.orm",
+    "myproject.core.module.vars",
+    # "myproject.module.redis",
 )
 
 # 全局注入了：

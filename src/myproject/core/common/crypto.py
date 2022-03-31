@@ -2,7 +2,8 @@ from ast import parse
 import base64
 from cryptography.fernet import Fernet
 
-def encrypt(text : str, key : str):
+
+def encrypt(text: str, key: str):
 
     key_bytes = generate_key(key).encode()
     text_bytes = text.encode()

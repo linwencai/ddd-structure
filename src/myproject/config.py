@@ -4,7 +4,7 @@ import os
 import re
 import pathlib
 import toml
-from  myproject.common.crypto import decrypt
+from myproject.core.common.crypto import decrypt
 
 _current_dir = pathlib.Path(os.path.dirname(__file__))
 
