@@ -1,3 +1,4 @@
+pydantic
 toml
 sanic==21.12
 aiofiles

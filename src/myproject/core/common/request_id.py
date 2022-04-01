@@ -2,7 +2,7 @@ from typing import Any
 
 from sanic import Request
 
-from myproject.common.trace import generate
+from myproject.core.common.trace import generate
 
 
 class CustomRequest(Request):
