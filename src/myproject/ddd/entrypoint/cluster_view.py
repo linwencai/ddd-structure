@@ -1,66 +1,96 @@
 from logging import getLogger
 
 from sanic import Blueprint
-from sanic_ext.extensions.openapi.definitions import RequestBody, Response
-from sanic_ext import openapi
 from sanic import HTTPResponse, Request, json
-from sqlalchemy import update
+from sanic_ext import openapi, validate
+from sanic_ext.extensions.openapi.definitions import RequestBody, Response, Parameter
 
-from myproject.ddd.domain.cluster_model import Cluster
 from myproject.ddd.entrypoint import cluster_appserv
-from ..message.response import ClusterResponse
-from ..message.request import CreateClusterRequest, UpdateClusterRequest
-from sanic_ext import validate
+from ..message.request import CreateClusterRequest, UpdateClusterRequest, ListRequest
+from ..message.response import ClusterResponse, ClusterListResponse
 
 bp = Blueprint("resourcemanager", url_prefix="/rs")
 logger = getLogger("myproject")
 
 
-@bp.put("/cluster")
-@openapi.definition(
-    body=RequestBody(UpdateClusterRequest, required=True),
-    summary="create_cluster",
-    tag="cluster",
-    response=[Response(UpdateClusterRequest, status=200)],
-)
-@validate(json=CreateClusterRequest)
-async def update_cluster(request: Request, body: UpdateClusterRequest) -> HTTPResponse:
-    appservice = cluster_appserv.ClusterAppService()
-    cluster_response = appservice.update_cluster(body)
-    if cluster_response:
-        return json(cluster_response.to_dict())
-    else:
-        return json({})
-
-
 @bp.post("/cluster")
 @openapi.definition(
     body=RequestBody(CreateClusterRequest, required=True),
-    summary="create_cluster",
+    summary="创建 cluster",
     tag="cluster",
     response=[Response(ClusterResponse, status=200)],
 )
 @validate(json=CreateClusterRequest)
 async def create_cluster(request: Request, body: CreateClusterRequest) -> HTTPResponse:
-    appservice = cluster_appserv.ClusterAppService()
-    cluster_response = appservice.create_cluster(body)
+    app_service = cluster_appserv.ClusterAppService()
+    cluster_response = app_service.create_cluster(body)
     if cluster_response:
-        return json(cluster_response.to_dict())
+        return json(cluster_response.dict())
     else:
         return json({})
 
 
-@bp.get("/cluster/<id:int>")
+@bp.delete("/cluster/<cluster_id:int>")
 @openapi.definition(
-    summary="get_cluster",
+    summary="删除 cluster",
     tag="cluster",
     response=[Response(ClusterResponse, status=200)],
 )
-async def get_cluster(request: Request, id: int) -> HTTPResponse:
-    appservice = cluster_appserv.ClusterAppService()
-    cluster_response = appservice.get_cluster_by_id(id)
+async def delete_cluster(request: Request, cluster_id: int) -> HTTPResponse:
+    body = UpdateClusterRequest(is_alive=False)
+    app_service = cluster_appserv.ClusterAppService()
+    cluster_response = app_service.update_cluster(cluster_id, body)
     if cluster_response:
-        return json(cluster_response.to_dict())
+        return json(cluster_response.dict())
     else:
         return json({})
 
+
+@bp.post("/cluster/<cluster_id:int>")
+@openapi.definition(
+    body=RequestBody(UpdateClusterRequest, required=True),
+    summary="修改 cluster",
+    tag="cluster",
+    response=[Response(ClusterResponse, status=200)],
+)
+@validate(json=UpdateClusterRequest)
+async def update_cluster(request: Request, cluster_id: int, body: UpdateClusterRequest) -> HTTPResponse:
+    app_service = cluster_appserv.ClusterAppService()
+    cluster_response = app_service.update_cluster(cluster_id, body)
+    if cluster_response:
+        return json(cluster_response.dict())
+    else:
+        return json({})
+
+
+@bp.get("/cluster/<cluster_id:int>")
+@openapi.definition(
+    summary="查询单个 cluster",
+    tag="cluster",
+    response=[Response(ClusterResponse, status=200)],
+)
+async def get_cluster(request: Request, cluster_id: int) -> HTTPResponse:
+    app_service = cluster_appserv.ClusterAppService()
+    cluster_response = app_service.get_cluster_by_id(cluster_id)
+    if cluster_response:
+        return json(cluster_response.dict())
+    else:
+        return json({})
+
+
+@bp.get("/clusters")
+@openapi.definition(
+    parameter=Parameter("get_cluster_list", ListRequest, required=True),
+    summary="获取多个 cluster",
+    tag="cluster",
+    response=[Response(ClusterListResponse, status=200)],
+)
+async def get_cluster_list(request: Request, parameter: ListRequest = None) -> HTTPResponse:
+    if parameter is None:
+        parameter = ListRequest()
+    app_service = cluster_appserv.ClusterAppService()
+    cluster_response = app_service.get_cluster_list(parameter)
+    if cluster_response:
+        return json(cluster_response.dict())
+    else:
+        return json({})

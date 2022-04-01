@@ -1,5 +1,4 @@
 from contextvars import ContextVar
-
 from sanic import Request, Sanic
 
 app = Sanic.get_app()

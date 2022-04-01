@@ -1,8 +1,7 @@
 import logging
-from myproject.ddd.domain.cluster_model import Cluster
 from myproject.ddd.service.cluster_service import ClusterService
-from myproject.ddd.message.request import CreateClusterRequest, UpdateClusterRequest
-from myproject.ddd.message.response import ClusterResponse
+from myproject.ddd.message.request import CreateClusterRequest, UpdateClusterRequest, ListRequest
+from myproject.ddd.message.response import ClusterResponse, ClusterListResponse
 
 app_logger = logging.getLogger("myproject")
 
@@ -35,7 +34,7 @@ class ClusterAppService:
 
     def get_cluster_by_id(self, cluster_id: int):
         try:
-            cluster: Cluster = self._service.get_cluster_by_id(cluster_id)
+            cluster = self._service.get_cluster_by_id(cluster_id)
             if cluster:
                 return ClusterResponse.from_orm(cluster)
             else:
@@ -45,10 +44,18 @@ class ClusterAppService:
             app_logger.exception("Exception:%s", err)
             return
 
-    def update_cluster(self, update_cluster_request: UpdateClusterRequest):
+    def update_cluster(self, cluster_id, update_cluster_request: UpdateClusterRequest):
         try:
-            cluster = self._service.update_cluster(update_cluster_request)
+            cluster = self._service.update_cluster(cluster_id, update_cluster_request)
             return ClusterResponse.from_orm(cluster)
+        except Exception as err:
+            app_logger.exception("Exception:%s", err)
+            return
+
+    def get_cluster_list(self, list_request: ListRequest):
+        try:
+            cluster_list = self._service.get_cluster_list(list_request)
+            return ClusterListResponse(data=[ClusterResponse.from_orm(cluster) for cluster in cluster_list])
         except Exception as err:
             app_logger.exception("Exception:%s", err)
             return

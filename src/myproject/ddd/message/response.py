@@ -1,8 +1,8 @@
 """
 消息契约：返回给前端的内容
 """
+from typing import Any, List
 import pydantic
-from typing import Any
 
 
 class BaseResponse(pydantic.BaseModel):
@@ -21,3 +21,8 @@ class ClusterResponse(BaseResponse):
     id: int = 0
     name: str
     desc: str
+    is_alive: bool
+
+
+class ClusterListResponse(BaseResponse):
+    data: List[ClusterResponse]
