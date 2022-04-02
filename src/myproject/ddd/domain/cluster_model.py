@@ -1,12 +1,12 @@
-from dataclasses import dataclass
-import datetime
+from dataclasses import dataclass, field
+from datetime import datetime
 
 
 @dataclass
 class Cluster:
-    id: int
+    id: int = field(init=False)
     name: str
     desc: str
-    ctime: datetime.datetime
-    mtime: datetime.datetime
+    ctime: int = field(init=False)
+    mtime: int = field(init=False)
     is_alive: bool = True

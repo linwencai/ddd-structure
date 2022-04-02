@@ -5,7 +5,7 @@ from sanic import Sanic
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, Session
 from myproject.core.module.vars import base_model_session_ctx
-from myproject.ddd.adapter import cluster_table
+from myproject.ddd.adapter import table_schema
 
 app = Sanic.get_app()
 
@@ -39,7 +39,7 @@ async def setup_orm_engine(app: Sanic, _) -> None:
 
 @app.after_server_start
 async def setup_orm_mapper(app: Sanic, _) -> None:
-    cluster_table.start_mappers()
+    table_schema.start_mappers()
 
 
 @app.on_request

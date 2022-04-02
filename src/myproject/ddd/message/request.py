@@ -2,6 +2,7 @@
 定义 前端输入的校验
 """
 import pydantic
+from typing import Optional
 
 
 class CreateClusterRequest(pydantic.BaseModel):
@@ -9,7 +10,16 @@ class CreateClusterRequest(pydantic.BaseModel):
     desc: str
 
 
+class DeleteClusterRequest(pydantic.BaseModel):
+    is_alive: bool
+
+
 class UpdateClusterRequest(pydantic.BaseModel):
-    id: int
-    name: str
-    desc: str
+    name: Optional[str]
+    desc: Optional[str]
+    is_alive: Optional[bool]
+
+
+class ListRequest(pydantic.BaseModel):
+    limit: int = 10
+    offset: int = 0

@@ -58,3 +58,7 @@ async def get_config(request):
     app_logger = logging.getLogger("myproject")
     app_logger.info(APP_CONFIG)
     return json(APP_CONFIG)
+
+
+if __name__ == "__main__":
+    app.run(debug=True)
