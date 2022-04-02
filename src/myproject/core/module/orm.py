@@ -2,10 +2,9 @@
 import urllib.parse
 from sanic import Sanic
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, Session
+from sqlalchemy.orm import sessionmaker
 from myproject.core.module.vars import base_model_session_ctx
-from myproject.ddd.adapter import table_schema
+from myproject.adapter import table_schema
 
 app = Sanic.get_app()
 

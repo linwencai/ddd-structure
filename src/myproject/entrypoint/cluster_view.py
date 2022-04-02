@@ -5,7 +5,7 @@ from sanic import HTTPResponse, Request, json
 from sanic_ext import openapi, validate
 from sanic_ext.extensions.openapi.definitions import RequestBody, Response, Parameter
 
-from myproject.ddd.entrypoint import cluster_appserv
+from myproject.entrypoint import cluster_appserv
 from ..message.request import CreateClusterRequest, UpdateClusterRequest, ListRequest
 from ..message.response import ClusterResponse, ClusterListResponse
 

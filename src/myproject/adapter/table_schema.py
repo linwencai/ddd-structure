@@ -2,7 +2,7 @@ from datetime import datetime
 from sqlalchemy import Column, Integer, String, TIMESTAMP, Boolean
 from sqlalchemy import func
 from sqlalchemy.orm import mapper
-from myproject.ddd.domain import cluster_model
+from myproject.domain import cluster_model
 from sqlalchemy.orm import declarative_base
 
 LRMBase = declarative_base()

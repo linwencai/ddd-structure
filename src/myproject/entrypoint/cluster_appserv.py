@@ -1,7 +1,7 @@
 import logging
-from myproject.ddd.service.cluster_service import ClusterService
-from myproject.ddd.message.request import CreateClusterRequest, UpdateClusterRequest, ListRequest
-from myproject.ddd.message.response import ClusterResponse, ClusterListResponse
+from myproject.service import ClusterService
+from myproject.message import CreateClusterRequest, UpdateClusterRequest, ListRequest
+from myproject.message import ClusterResponse, ClusterListResponse
 
 app_logger = logging.getLogger("myproject")
 

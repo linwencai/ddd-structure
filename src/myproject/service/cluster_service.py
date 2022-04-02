@@ -2,8 +2,8 @@
 
 """
 from myproject.core.ddd.base import DomainService
-from myproject.ddd.adapter.cluster_repository import SqlAlchemyRepository
-from myproject.ddd.message.request import CreateClusterRequest, UpdateClusterRequest, ListRequest
+from myproject.adapter import SqlAlchemyRepository
+from myproject.message import CreateClusterRequest, UpdateClusterRequest, ListRequest
 
 
 class ClusterService(DomainService):

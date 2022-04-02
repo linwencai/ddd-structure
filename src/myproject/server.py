@@ -22,6 +22,7 @@ DEFAULT: Tuple[str, ...] = (
     "myproject.core.common.context",
     "myproject.core.module.orm",
     "myproject.core.module.vars",
+    "myproject.core.ddd.exception"
     # "myproject.module.redis",
 )
 

@@ -1,8 +1,8 @@
 import abc
 from sqlalchemy.orm import Session
 from sqlalchemy.future import select
-from myproject.ddd.domain import cluster_model
-from myproject.ddd.message.request import CreateClusterRequest, UpdateClusterRequest, ListRequest
+from myproject.domain import cluster_model
+from myproject.message import CreateClusterRequest, UpdateClusterRequest, ListRequest
 
 
 class AbstractRepository(abc.ABC):
