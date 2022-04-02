@@ -13,14 +13,14 @@ class ClusterService(DomainService):
         # TODO
         # self.UOF
 
-    def create_cluster(self, create_cluster_request: CreateClusterRequest):
-        return self.repository.add(create_cluster_request)
+    async def create_cluster(self, create_cluster_request: CreateClusterRequest):
+        return await self.repository.add(create_cluster_request)
 
-    def get_cluster_by_id(self, cluster_id: int):
-        return self.repository.get(cluster_id)
+    async def get_cluster_by_id(self, cluster_id: int):
+        return await self.repository.get(cluster_id)
 
-    def update_cluster(self, cluster_id, update_cluster_request: UpdateClusterRequest):
-        return self.repository.update(cluster_id, update_cluster_request)
+    async def update_cluster(self, cluster_id, update_cluster_request: UpdateClusterRequest):
+        return await self.repository.update(cluster_id, update_cluster_request)
 
-    def get_cluster_list(self, list_request: ListRequest):
-        return self.repository.list(list_request)
+    async def get_cluster_list(self, list_request: ListRequest):
+        return await self.repository.list(list_request)

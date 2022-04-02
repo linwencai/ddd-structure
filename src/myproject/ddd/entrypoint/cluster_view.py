@@ -23,7 +23,7 @@ logger = getLogger("myproject")
 @validate(json=CreateClusterRequest)
 async def create_cluster(request: Request, body: CreateClusterRequest) -> HTTPResponse:
     app_service = cluster_appserv.ClusterAppService()
-    cluster_response = app_service.create_cluster(body)
+    cluster_response = await app_service.create_cluster(body)
     if cluster_response:
         return json(cluster_response.dict())
     else:
@@ -39,7 +39,7 @@ async def create_cluster(request: Request, body: CreateClusterRequest) -> HTTPRe
 async def delete_cluster(request: Request, cluster_id: int) -> HTTPResponse:
     body = UpdateClusterRequest(is_alive=False)
     app_service = cluster_appserv.ClusterAppService()
-    cluster_response = app_service.update_cluster(cluster_id, body)
+    cluster_response = await app_service.update_cluster(cluster_id, body)
     if cluster_response:
         return json(cluster_response.dict())
     else:
@@ -56,7 +56,7 @@ async def delete_cluster(request: Request, cluster_id: int) -> HTTPResponse:
 @validate(json=UpdateClusterRequest)
 async def update_cluster(request: Request, cluster_id: int, body: UpdateClusterRequest) -> HTTPResponse:
     app_service = cluster_appserv.ClusterAppService()
-    cluster_response = app_service.update_cluster(cluster_id, body)
+    cluster_response = await app_service.update_cluster(cluster_id, body)
     if cluster_response:
         return json(cluster_response.dict())
     else:
@@ -71,7 +71,7 @@ async def update_cluster(request: Request, cluster_id: int, body: UpdateClusterR
 )
 async def get_cluster(request: Request, cluster_id: int) -> HTTPResponse:
     app_service = cluster_appserv.ClusterAppService()
-    cluster_response = app_service.get_cluster_by_id(cluster_id)
+    cluster_response = await app_service.get_cluster_by_id(cluster_id)
     if cluster_response:
         return json(cluster_response.dict())
     else:
@@ -89,7 +89,7 @@ async def get_cluster_list(request: Request, parameter: ListRequest = None) -> H
     if parameter is None:
         parameter = ListRequest()
     app_service = cluster_appserv.ClusterAppService()
-    cluster_response = app_service.get_cluster_list(parameter)
+    cluster_response = await app_service.get_cluster_list(parameter)
     if cluster_response:
         return json(cluster_response.dict())
     else:

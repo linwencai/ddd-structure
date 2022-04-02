@@ -24,17 +24,17 @@ class ClusterAppService:
     def set_service(self, service: ClusterService):
         self._service = service
 
-    def create_cluster(self, create_cluster_request: CreateClusterRequest):
+    async def create_cluster(self, create_cluster_request: CreateClusterRequest):
         try:
-            cluster = self._service.create_cluster(create_cluster_request)
+            cluster = await self._service.create_cluster(create_cluster_request)
             return ClusterResponse.from_orm(cluster)
         except Exception as err:
             app_logger.exception("Exception:%s", err)
             return
 
-    def get_cluster_by_id(self, cluster_id: int):
+    async def get_cluster_by_id(self, cluster_id: int):
         try:
-            cluster = self._service.get_cluster_by_id(cluster_id)
+            cluster = await self._service.get_cluster_by_id(cluster_id)
             if cluster:
                 return ClusterResponse.from_orm(cluster)
             else:
@@ -44,17 +44,17 @@ class ClusterAppService:
             app_logger.exception("Exception:%s", err)
             return
 
-    def update_cluster(self, cluster_id, update_cluster_request: UpdateClusterRequest):
+    async def update_cluster(self, cluster_id, update_cluster_request: UpdateClusterRequest):
         try:
-            cluster = self._service.update_cluster(cluster_id, update_cluster_request)
+            cluster = await self._service.update_cluster(cluster_id, update_cluster_request)
             return ClusterResponse.from_orm(cluster)
         except Exception as err:
             app_logger.exception("Exception:%s", err)
             return
 
-    def get_cluster_list(self, list_request: ListRequest):
+    async def get_cluster_list(self, list_request: ListRequest):
         try:
-            cluster_list = self._service.get_cluster_list(list_request)
+            cluster_list = await self._service.get_cluster_list(list_request)
             return ClusterListResponse(data=[ClusterResponse.from_orm(cluster) for cluster in cluster_list])
         except Exception as err:
             app_logger.exception("Exception:%s", err)

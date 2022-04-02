@@ -1,5 +1,6 @@
 import abc
 from sqlalchemy.orm import Session
+from sqlalchemy.future import select
 from myproject.ddd.domain import cluster_model
 from myproject.ddd.message.request import CreateClusterRequest, UpdateClusterRequest, ListRequest
 
@@ -23,31 +24,44 @@ class SqlAlchemyRepository(AbstractRepository):
         super().__init__()
         self.session: Session = session
 
-    def add(self, create_cluster_request: CreateClusterRequest):
+    async def add(self, create_cluster_request: CreateClusterRequest):
         cluster = cluster_model.Cluster(**create_cluster_request.dict())
-        with self.session.begin():
+        async with self.session.begin():
             self.session.add(cluster)
         return cluster
 
-    def get(self, cluster_id) -> cluster_model.Cluster:
-        cluster = self.session.query(cluster_model.Cluster).filter_by(id=cluster_id).first()
+    async def get(self, cluster_id) -> cluster_model.Cluster:
+        # cluster = self.session.query(cluster_model.Cluster).filter_by(id=cluster_id).first()
+        stmt = select(cluster_model.Cluster).filter_by(id=cluster_id)
+        cluster = (await self.session.execute(stmt)).scalars().first()
         if cluster is None:
             # TODO
             pass
         return cluster
 
-    def update(self, cluster_id, update_cluster_request: UpdateClusterRequest):
-        with self.session.begin():
-            cluster = self.get(cluster_id)
-            if update_cluster_request.name is not None:
-                cluster.name = update_cluster_request.name
-            if update_cluster_request.desc is not None:
-                cluster.desc = update_cluster_request.desc
-            if update_cluster_request.is_alive is not None:
-                cluster.is_alive = update_cluster_request.is_alive
+    async def update(self, cluster_id, update_cluster_request: UpdateClusterRequest):
+        async with self.session.begin():
+            # cluster = await self.get(cluster_id)
+            # if update_cluster_request.name is not None:
+            #     cluster.name = update_cluster_request.name
+            # if update_cluster_request.desc is not None:
+            #     cluster.desc = update_cluster_request.desc
+            # if update_cluster_request.is_alive is not None:
+            #     cluster.is_alive = update_cluster_request.is_alive
+
+            # FIXME
+            cluster = cluster_model.Cluster(
+                name=update_cluster_request.name,
+                desc=update_cluster_request.desc,
+                is_alive=update_cluster_request.is_alive
+            )
+            cluster.id = cluster_id
+            await self.session.merge(cluster)
         return cluster
 
-    def list(self, list_request: ListRequest):
+    async def list(self, list_request: ListRequest):
         offset = list_request.offset * list_request.limit
         limit = list_request.limit
-        return self.session.query(cluster_model.Cluster).filter_by(is_alive=True).offset(offset).limit(limit)
+        # return self.session.query(cluster_model.Cluster).filter_by(is_alive=True).offset(offset).limit(limit)
+        stmt = select(cluster_model.Cluster).filter_by(is_alive=True).offset(offset).limit(limit)
+        return (await self.session.execute(stmt)).scalars()

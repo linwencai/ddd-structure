@@ -11,13 +11,13 @@ class CreateClusterRequest(pydantic.BaseModel):
 
 
 class DeleteClusterRequest(pydantic.BaseModel):
-    is_alive: bool
+    is_alive: bool = True
 
 
 class UpdateClusterRequest(pydantic.BaseModel):
-    name: Optional[str]
-    desc: Optional[str]
-    is_alive: Optional[bool]
+    name: Optional[str] = ""
+    desc: Optional[str] = ""
+    is_alive: Optional[bool] = True
 
 
 class ListRequest(pydantic.BaseModel):
