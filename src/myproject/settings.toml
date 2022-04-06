@@ -16,7 +16,7 @@ health_check_interval=60 # 设置成比redis生产超时时间短即可
 
 [database]
 dialect="sqlite"
-# driver="aiosqlite"
+driver="aiosqlite"
 username=""
 password="ENC(gAAAAABiP_eVv_nH8GuTs0-cPw99kxd_r5FuHCVHmc0N2VjLpGwT041uoRs5mFnJIGG1N3dxHTKyag48Amn1X85Un6Z9TH1NzA==)" # secret_key encrypt 加密的结果
 host="127.0.0.1"

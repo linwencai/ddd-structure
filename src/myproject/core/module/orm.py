@@ -1,7 +1,7 @@
 
 import urllib.parse
 from sanic import Sanic
-# from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
+from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, Session
 from myproject.core.module.vars import base_model_session_ctx
@@ -33,8 +33,8 @@ def get_orm_dsn(options):
 @app.before_server_start
 async def setup_orm_engine(app: Sanic, _) -> None:
     dsn = get_orm_dsn(app.config.get("database"))
-    # app.ctx.orm_engine = create_async_engine(dsn)
-    app.ctx.orm_engine = create_engine(dsn)
+    app.ctx.orm_engine = create_async_engine(dsn)
+    # app.ctx.orm_engine = create_engine(dsn)
 
 
 @app.after_server_start
@@ -44,8 +44,8 @@ async def setup_orm_mapper(app: Sanic, _) -> None:
 
 @app.on_request
 async def inject_session(request):
-    # request.ctx.orm_session = sessionmaker(app.ctx.orm_engine, AsyncSession, expire_on_commit=False)()
-    request.ctx.orm_session = sessionmaker(app.ctx.orm_engine, Session, expire_on_commit=False)()
+    request.ctx.orm_session = sessionmaker(app.ctx.orm_engine, AsyncSession, expire_on_commit=False)()
+    # request.ctx.orm_session = sessionmaker(app.ctx.orm_engine, Session, expire_on_commit=False)()
     request.ctx.orm_session_ctx_token = base_model_session_ctx.set(request.ctx.orm_session)
 
 
@@ -53,5 +53,5 @@ async def inject_session(request):
 async def close_session(request, response):
     if hasattr(request.ctx, "orm_session_ctx_token"):
         base_model_session_ctx.reset(request.ctx.orm_session_ctx_token)
-        # await request.ctx.orm_session.close()
-        request.ctx.orm_session.close()
+        await request.ctx.orm_session.close()
+        # request.ctx.orm_session.close()

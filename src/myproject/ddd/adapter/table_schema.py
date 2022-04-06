@@ -14,8 +14,8 @@ class ClusterOrm(LRMBase):
     id = Column(Integer, primary_key=True, autoincrement=True, comment="id")
     name = Column(String(64), nullable=False, comment="名称")
     desc = Column(String(256), comment="描述")
-    ctime = Column(TIMESTAMP(True), default=datetime.now, comment="创建时间")
-    mtime = Column(TIMESTAMP(True), default=datetime.now, onupdate=func.now(), comment="修改时间")
+    ctime = Column(TIMESTAMP(), default=datetime.now, comment="创建时间")
+    mtime = Column(TIMESTAMP(), default=datetime.now, onupdate=func.now(), comment="修改时间")
     is_alive = Column(Boolean, default=True, nullable=False, comment="是否有效")
 
 
