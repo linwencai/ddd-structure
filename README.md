@@ -1,8 +1,8 @@
 # My prject
 
-第一件事，请把 代码中，所有的 **myproject** 替换成真实的项目名称
+第一件事，请把 代码中，所有的 **diting** 替换成真实的项目名称
 
-Please modify myproject in the prject
+Please modify diting in the prject
 
 ## Usage
 
@@ -14,13 +14,13 @@ cd src/
 ```
 
 ```bash
-sanic --host=0.0.0.0 --port=7777 --worker=1 myproject.server.create_app
+sanic --host=0.0.0.0 --port=7777 --worker=1 diting.server.create_app
 ```
 
 ### 调试启动
 
 ```bash
-python -m sanic --dev myproject.server.app
+python -m sanic --dev diting.server.app
 ```
 
 ### swagger
@@ -49,14 +49,14 @@ settings.toml 中的 secret_key， 内部代码封装是，会自动生成 encod
 #### encode_secret_key 生成命令
 
 ```bash
-cd src/myproject/core/common
+cd src/diting/core/common
 python crypto.py -a generate -d 'YOUR_SECRET_KEY'
 ```
 
 #### 加密命令
 
 ```bash
-cd src/myproject/core/common
+cd src/diting/core/common
 python crypto.py -a encrypt -d 'YOUR_NEED_ENCRYPT_DATA' -k 'YOUR_SECRET_KEY'
 
 ```
@@ -64,7 +64,7 @@ python crypto.py -a encrypt -d 'YOUR_NEED_ENCRYPT_DATA' -k 'YOUR_SECRET_KEY'
 #### 解密命令
 
 ```bash
-cd src/myproject/core/common
+cd src/diting/core/common
 python crypto.py -a decrypt -d 'YOUR_ENCRYPTED_DATA' -k 'YOUR_SECRET_KEY'
 ```
 
@@ -77,7 +77,7 @@ python crypto.py -a decrypt -d 'YOUR_ENCRYPTED_DATA' -k 'YOUR_SECRET_KEY'
 
 ```bash
 # 切换到和 alembic.ini 同一级的目录
-cd src/myproject
+cd src/diting
 
 # 生成变化
 alembic revision --autogenerate -m "init db"
