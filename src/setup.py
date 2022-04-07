@@ -4,5 +4,5 @@
 from setuptools import setup
 
 setup(
-    name="myproject", version="0.1", packages=["myproject"],
+    name="diting", version="0.1", packages=["diting"],
 )
