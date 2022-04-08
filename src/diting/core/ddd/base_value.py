@@ -12,7 +12,7 @@ from collections.abc import MutableMapping
 from collections import defaultdict
 from functools import partial
 
-class ComplexEncoder(json.JSONEncoder):
+class DatetimeJSONEncoder(json.JSONEncoder):
 
     def default(self, obj):
         if isinstance(obj, datetime):
@@ -42,7 +42,7 @@ def unflatten_dict(d: MutableMapping, sep: str="_") -> MutableMapping:
         else:
             sep_keys = key.split(sep)
         _nested(infinite_defaultdict, sep_keys, value)
-    return json.loads(json.dumps(infinite_defaultdict, cls=ComplexEncoder))
+    return json.loads(json.dumps(infinite_defaultdict, cls=DatetimeJSONEncoder))
 
 def flatten_dict(d: MutableMapping, parent_key: str = '', sep: str ='_') -> MutableMapping:
     items = []
@@ -58,7 +58,7 @@ def flatten_dict(d: MutableMapping, parent_key: str = '', sep: str ='_') -> Muta
 
 # ----------------------request---------------------------------- #
 class QueryRequestBase(pydantic.BaseModel):
-    cond : dict=defaultdict(str)
+    pass
 
 class PaginationRequestBase(QueryRequestBase):
     limit: int=30
@@ -76,6 +76,7 @@ class ObjBase:
     @classmethod
     def make_from_dict(cls, **kwargs):
         '''
+        从 dict 构建 dataclass, 
         OBJ.from_dict(**dict)
         '''
         construction_params = {}
@@ -98,14 +99,31 @@ class ObjBase:
 
     @classmethod
     def make_from_flatten_dict(cls, sep="_", **kwargs):
+        """
+        从扁平的dict 进行构建，一般是 ORM --> dataclass
+        """
         regular_dict = unflatten_dict(kwargs, sep=sep)
         return cls.make_from_dict(**regular_dict)
 
+    @classmethod
+    def make_from_domain(cls, model):
+        '''
+        从类似的结构的dataclass 构建，一般是 domainObj --> responseObj
+        '''
+        return cls.make_from_dict(**asdict(model))
+
     def flatten(self):
+        '''
+        扁平化 dict, 一般是   domainObj --> ORM
+        '''
         return flatten_dict(asdict(self), sep="_")
 
     def to_json(self):
-        return asdict(self)
+        '''
+        输出给前端的时候用，一般是  responseObj --> json
+        '''
+        return json.loads(json.dumps(asdict(self), cls=DatetimeJSONEncoder))
+        # return asdict(self)
 
 @dataclass
 class Entity(ObjBase):
@@ -113,6 +131,10 @@ class Entity(ObjBase):
     alived: bool=True
     ctime: datetime=field(default_factory=lambda : datetime.now())
     mtime: datetime=field(default_factory=lambda : datetime.now())
+
+@dataclass
+class ResponseEntity(Entity):
+    pass
 
 @dataclass
 class ValueObject(ObjBase):

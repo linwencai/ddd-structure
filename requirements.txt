@@ -1,6 +1,8 @@
+ujson
 pydantic
 toml
 sanic==21.12
+sanic-ext
 aiofiles
 aioredis
 cryptography
@@ -8,5 +10,4 @@ httpx
 sqlalchemy
 aiomysql
 aiosqlite
-ujson==1.35
 alembic

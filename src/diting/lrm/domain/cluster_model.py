@@ -13,7 +13,7 @@ class Quota(ValueObject):
 class Ingress(ValueObject):
     ip : str=""
     host : str=""
-    port : int=0
+    port : int=80
 
 @dataclass
 class K8SAuth(ValueObject):
@@ -32,6 +32,6 @@ class Cluster(Aggregation):
     cpu  : Quota = Quota(0, "m")
     memory : Quota = Quota(0, "Mi")
     ingress : Ingress = Ingress()
-    kubeconfig : K8SAuth = K8SAuth()
+    kube : K8SAuth = K8SAuth()
     harbor : HarborSetting = HarborSetting()
 

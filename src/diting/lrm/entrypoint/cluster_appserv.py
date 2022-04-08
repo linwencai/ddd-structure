@@ -23,39 +23,29 @@ class ClusterAppService:
 
     def set_service(self, service: ClusterService):
         self.domainservice = service
-
+    
     async def create_cluster(self, create_cluster_request: ClusterCreatingRequest):
         try:
             cluster = await self.domainservice.create_cluster(create_cluster_request)
-            return ClusterResponse.from_orm(cluster)
+            return ClusterResponse.make_from_domain(cluster)
         except Exception as err:
             app_logger.exception("Exception:%s", err)
             return
 
-    async def get_cluster_by_id(self, cluster_id: int):
-        try:
-            cluster = await self.domainservice.get_cluster_by_id(cluster_id)
-            if cluster:
-                return ClusterResponse.from_orm(cluster)
-            else:
-                return
-            # return cluster
-        except Exception as err:
-            app_logger.exception("Exception:%s", err)
-            return
+    async def get_cluster_by_id(self, cluster_id: str):
+        # get 逻辑，直接在appservice 通过仓库拿
+        cluster = await self.domainservice.repository.get(cluster_id)
+        return ClusterResponse.make_from_domain(cluster)
 
     async def update_cluster(self, cluster_id, update_cluster_request: ClusterUpdatingRequest):
-        try:
-            cluster = await self.domainservice.update_cluster(cluster_id, update_cluster_request)
-            return ClusterResponse.from_orm(cluster)
-        except Exception as err:
-            app_logger.exception("Exception:%s", err)
-            return
+        cluster = await self.domainservice.update_cluster(cluster_id, update_cluster_request)
+        return ClusterResponse.make_from_domain(cluster)
 
-    async def get_cluster_list(self, list_request: ClusterListingRequest):
-        try:
-            cluster_list = await self.domainservice.get_cluster_list(list_request)
-            return ClusterListResponse(data=[ClusterResponse.from_orm(cluster) for cluster in cluster_list])
-        except Exception as err:
-            app_logger.exception("Exception:%s", err)
-            return
+
+    # async def get_cluster_list(self, list_request: ClusterListingRequest):
+    #     try:
+    #         cluster_list = await self.domainservice.get_cluster_list(list_request)
+    #         return ClusterListResponse(data=[ClusterResponse.from_orm(cluster) for cluster in cluster_list])
+    #     except Exception as err:
+    #         app_logger.exception("Exception:%s", err)
+    #         return

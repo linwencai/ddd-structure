@@ -21,6 +21,7 @@ DEFAULT: Tuple[str, ...] = (
     "diting.urls",
     "diting.core.common.context",
     "diting.core.module.orm",
+    "diting.core.ddd.exception"
     # "diting.core.module.redis",
     # "diting.core.module.snowflake"   # snowflake 必须在redis 后启动，依赖redis incr 特性
 )

@@ -1,5 +1,6 @@
 import abc
-from sqlalchemy.orm import Session
+from sanic import exceptions as sanic_exception
+from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from diting.lrm.domain import cluster_model
 from diting.lrm.adapter import table_schema
@@ -23,7 +24,7 @@ class AbstractRepository(abc.ABC):
 class ClusterRepository(AbstractRepository):
     def __init__(self, session):
         super().__init__()
-        self.session: Session = session
+        self.session: AsyncSession = session
 
     async def add(self, create_cluster_request: ClusterCreatingRequest):
 
@@ -34,37 +35,32 @@ class ClusterRepository(AbstractRepository):
         return cluster
 
     async def get(self, cluster_id) -> cluster_model.Cluster:
-        # cluster = self.session.query(cluster_model.Cluster).filter_by(id=cluster_id).first()
+        cluster_table = await self._get(cluster_id)
+        return cluster_model.Cluster.make_from_flatten_dict(**cluster_table.to_dict())
+
+    async def _get(self, cluster_id) -> table_schema.ClusterTable:
         stmt = select(table_schema.ClusterTable).filter_by(id=cluster_id)
-        cluster = (await self.session.execute(stmt)).scalars().first()
-        if cluster is None:
-            # TODO
-            pass
-        return cluster_model.Cluster.make_from_flatten_dict(**cluster.to_dict())
+        cluster_table = (await self.session.execute(stmt)).scalars().first()
+        if cluster_table is None:
+            raise sanic_exception.NotFound(f"can't find cluster of {cluster_id}")
+        return cluster_table
 
-    async def update(self, cluster_id, update_cluster_request: ClusterUpdatingRequest):
+    async def _update(self, cluster_id, changedvalues : dict):
         async with self.session.begin():
-            # cluster = await self.get(cluster_id)
-            # if update_cluster_request.name is not None:
-            #     cluster.name = update_cluster_request.name
-            # if update_cluster_request.desc is not None:
-            #     cluster.desc = update_cluster_request.desc
-            # if update_cluster_request.is_alive is not None:
-            #     cluster.is_alive = update_cluster_request.is_alive
+            cluster_table = await self._get(cluster_id)
+            if cluster_table is None:
+                raise sanic_exception.NotFound(f"can't find cluster of {cluster_id}")
 
-            # FIXME
-            cluster = cluster_model.Cluster(
-                name=update_cluster_request.name,
-                desc=update_cluster_request.desc,
-                is_alive=update_cluster_request.is_alive
-            )
-            cluster.id = cluster_id
-            await self.session.merge(cluster)
-        return cluster
+            for key, value in changedvalues.items():
+                setattr(cluster_table, key, value)
 
-    async def list(self, list_request: ClusterListingRequest):
-        offset = list_request.offset * list_request.limit
-        limit = list_request.limit
-        # return self.session.query(cluster_model.Cluster).filter_by(is_alive=True).offset(offset).limit(limit)
-        stmt = select(cluster_model.Cluster).filter_by(is_alive=True).offset(offset).limit(limit)
-        return (await self.session.execute(stmt)).scalars()
+    async def update(self, cluster_id, changedvalues : dict):
+        await self._update(cluster_id, changedvalues)
+        return await self.get(cluster_id)
+
+    # async def list(self, list_request: ClusterListingRequest):
+    #     offset = list_request.offset * list_request.limit
+    #     limit = list_request.limit
+    #     # return self.session.query(cluster_model.Cluster).filter_by(is_alive=True).offset(offset).limit(limit)
+    #     stmt = select(cluster_model.Cluster).filter_by(is_alive=True).offset(offset).limit(limit)
+    #     return (await self.session.execute(stmt)).scalars()

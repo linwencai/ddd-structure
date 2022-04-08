@@ -14,7 +14,7 @@ async def not_fount(request: Request, exception: exceptions.SanicException):
     :return:
     """
     logger.error(f"not_fount request=%s exception=%s", request, exception)
-    return json({"status": 404, "message": str(exception)}, 404)
+    return json({"code": 404, "detail": str(exception), "data":{}, "message" : "not fund"}, 404)
 
 
 @app.exception(exceptions.SanicException)
