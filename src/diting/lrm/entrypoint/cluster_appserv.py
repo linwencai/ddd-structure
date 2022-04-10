@@ -3,7 +3,7 @@ from diting.lrm.service.cluster_service import ClusterService
 from diting.lrm.message.request import ClusterCreatingRequest, ClusterUpdatingRequest, ClusterListingRequest
 from diting.lrm.message.response import ClusterResponse, ClusterListResponse
 
-app_logger = logging.getLogger("diting")
+from diting.core.common.log import app_logger as logger
 
 
 class AppService:
@@ -11,7 +11,6 @@ class AppService:
 
     def __init__(self, session):
         _session = session
-
 
 class ClusterAppService:
 
@@ -29,7 +28,7 @@ class ClusterAppService:
             cluster = await self.domainservice.create_cluster(create_cluster_request)
             return ClusterResponse.make_from_domain(cluster)
         except Exception as err:
-            app_logger.exception("Exception:%s", err)
+            logger.exception("Exception:%s", err)
             return
 
     async def get_cluster_by_id(self, cluster_id: str):

@@ -4,9 +4,10 @@ secret_key="fintech-ftc-dip"
 encode_secret_key="ZmludGVjaC1mdGMtZGlweHh4eHh4eHh4eHh4eHh4eHg="  # 上述两个必须匹配，请查看crypto 相关逻辑
 
 [redis]
-dsn="redis://localhost" # redis://, rediss://, unix://
+dsn="{schema}://{host}"
 type="Single" # Single, Sentinel
-host="127.0.0.1"  # 以下变量部分将覆盖dsn部分参数
+schema="redis"  # redis://, rediss://, unix://
+host="ubuntu"  # 以下变量部分将覆盖dsn部分参数
 port=6379
 db=0
 username=""
@@ -23,6 +24,9 @@ host="127.0.0.1"
 port=3306
 database="diting/sqlite.db"  # 数据库库表或sqlite的db路径
 
+[id-generator]
+method="snowflake" # uuid, or snowflake
+
 [log]
 level=20    # DEBUG 10 INFO 20 WARNING 30 ERROR 40
 format="%(asctime)s.%(msecs)03d %(levelname)s [%(filename)s:%(lineno)s] %(request_info)s%(message)s"
@@ -30,6 +34,12 @@ datefmt="%Y-%m-%d %H:%M:%S"
 ouput="output.log"
 interval=1 # 每日创建
 keep=30 # 保留天数
+
+[scheduler]
+    [scheduler.check_log_level]
+    check_key="diting:sys:log:level"  # redis 上的key， 用于动态更新日志级别
+    job_id="check_log_level"
+    interval=5
 
 [sanic]
 OAS_UI_DEFAULT="redoc"

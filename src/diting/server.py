@@ -14,16 +14,19 @@ from diting.core.common.log import setup_logging
 from diting.core.module.module import setup_modules
 from diting.core.common.request_id import CustomRequest
 from diting.config import APP_CONFIG, SANIC_CONFIG
+from diting.core.common.log import app_logger as logger
+
 
 APPNAME = APP_CONFIG['APP']
 
 DEFAULT: Tuple[str, ...] = (
-    "diting.urls",
     "diting.core.common.context",
     "diting.core.module.orm",
-    "diting.core.ddd.exception"
-    # "diting.core.module.redis",
-    # "diting.core.module.snowflake"   # snowflake 必须在redis 后启动，依赖redis incr 特性
+    "diting.core.ddd.exception",
+    "diting.core.module.redis",
+    "diting.core.module.scheduler",
+    "diting.core.module.snowflake",   # snowflake 必须在redis 后启动，依赖redis incr 特性
+    "diting.urls",
 )
 
 # 全局注入了：
@@ -56,9 +59,9 @@ app = create_app()
 @app.get("/config")
 async def get_config(request):
     import logging
-    app_logger = logging.getLogger("diting")
-    app_logger.info(APP_CONFIG)
+    logger.info(APP_CONFIG)
     return json(APP_CONFIG)
+
 
 
 if __name__ == "__main__":

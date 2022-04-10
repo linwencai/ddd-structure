@@ -1,6 +1,7 @@
 from email.policy import default
 import logging
 import sys
+import aioredis
 from functools import partial
 from collections import defaultdict
 
@@ -8,7 +9,6 @@ from sanic import Sanic
 from sanic.log import access_logger, error_logger, logger
 
 app_logger = logging.getLogger("diting")
-
 
 DEFAULT_LOGGING_FORMAT = (
     "[%(asctime)s.%(msecs)03d] [%(levelname)s] [%(filename)s:%(lineno)s] "
@@ -91,3 +91,11 @@ def setup_logging(app: Sanic, setup_factory: bool = True):
 
     if setup_factory:
         logging.setLogRecordFactory(partial(_record_factory, app=app))
+
+def set_logger_level(app: Sanic, log_level):
+
+    log_level_name = logging.getLevelName(log_level)
+    for lggr in (app_logger, access_logger, logger, error_logger):
+        lggr.warning(f"switch log-level to {log_level_name}")
+        lggr.setLevel(log_level)
+    app.config.get("log")['level'] = log_level

@@ -1,10 +1,9 @@
-from logging import getLogger
-
 from sanic import Blueprint
 from sanic import Request
 from sanic_ext import openapi, validate, serializer
 from sanic_ext.extensions.openapi.definitions import RequestBody, Response, Parameter
 
+from diting.core.common.log import app_logger as logger
 from diting.core.common.openapi import openapi_response_wrapper as Wrap
 from diting.core.common.serializer import message
 from diting.lrm.entrypoint import cluster_appserv
@@ -12,8 +11,6 @@ from diting.lrm.message.request import ClusterCreatingRequest, ClusterUpdatingRe
 from diting.lrm.message.response import ClusterResponse, ClusterListResponse
 
 bp = Blueprint("resourcemanager", url_prefix="/lrm")
-logger = getLogger("diting")
-
 
 @bp.post("/cluster/create")
 @openapi.definition(

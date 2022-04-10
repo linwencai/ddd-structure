@@ -11,7 +11,15 @@ from diting.core.common.context import base_model_session_ctx
 from collections.abc import MutableMapping
 from collections import defaultdict
 from functools import partial
+from sanic import Sanic
 
+_app = Sanic.get_app()
+_id_generator_config = _app.config.get("id-generator", {})
+if _id_generator_config.get("method", "uuid"):
+    id_generator = lambda : str(uuid.uuid4())
+else:
+    from diting.core.module.snowflake import generate_snowflake_id
+    id_generator = generate_snowflake_id
 class DatetimeJSONEncoder(json.JSONEncoder):
 
     def default(self, obj):
@@ -127,7 +135,7 @@ class ObjBase:
 
 @dataclass
 class Entity(ObjBase):
-    id: Union[int, str]=field(default_factory=lambda : str(uuid.uuid4()))
+    id: Union[int, str]=field(default_factory=id_generator)
     alived: bool=True
     ctime: datetime=field(default_factory=lambda : datetime.now())
     mtime: datetime=field(default_factory=lambda : datetime.now())
