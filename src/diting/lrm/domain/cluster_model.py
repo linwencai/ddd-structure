@@ -19,6 +19,12 @@ class Ingress(ValueObject):
 class K8SAuth(ValueObject):
     config : str=""
 
+    def __post__init(self):
+        # TODO, 解密下前端传过来的内容, 基于Fernet加解密
+        # self.config = XXXX
+        pass
+
+
 @dataclass
 class HarborSetting(ValueObject):
     address : str=""

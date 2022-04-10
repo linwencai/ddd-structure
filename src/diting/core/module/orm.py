@@ -24,7 +24,7 @@ def get_orm_dsn(options):
 
     if dialect == "sqlite":
         if driver is None:
-            return f"{dialect}:///{database}"
+            return f"{dialect}://{database}"
         else:
             return f"{dialect}+{driver}:///{database}"
 
