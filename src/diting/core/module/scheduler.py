@@ -13,23 +13,15 @@ async def tick():
 @app.after_server_start
 async def initialize_scheduler(app: Sanic, _) -> None:
 
-    try:
-        if platform.system() == "Linux":
-            import fcntl
-            _ = open("/tmp/sanic.lock","w")
-            _fd = _.fileno()
-            fcntl.lockf(_fd,fcntl.LOCK_EX|fcntl.LOCK_NB)
+    scheduler = AsyncIOScheduler({'event_loop': app.loop})
+    app.ctx.scheduler = scheduler
 
-        scheduler = AsyncIOScheduler({'event_loop': app.loop})
-        app.ctx.scheduler = scheduler
+    # adding scheduler_tasks
+    import diting.core.module.scheduler_task
 
-        # adding scheduler_tasks
-        import diting.core.module.scheduler_task
+    scheduler.start()
+    logger.info("Scheduler Started!")
 
-        scheduler.start()
-        logger.info("Scheduler Started!")
-    except BlockingIOError:
-        pass
 
 @app.after_server_stop
 async def shutdown_scheduler(app: Sanic, _) -> None:
