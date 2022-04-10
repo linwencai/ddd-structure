@@ -17,8 +17,17 @@ DEFAULT_LOGGING_FORMAT = (
 DEFAULT_LOGGING_DATEFORMAT = "%Y-%m-%d %H:%M:%S %z"
 old_factory = logging.getLogRecordFactory()
 
-_pid = os.getpid()
-_hostname = socket.gethostname()
+hostname_pid = {
+    "pid" : os.getpid(),
+    "hostname" : os.getpid()
+}
+
+def log_update_hostname_pid():
+    global hostname_pid
+    hostname_pid = {
+    "pid" : os.getpid(),
+    "hostname" : os.getpid()
+}
 
 class ColorFormatter(logging.Formatter):
     COLORS = {
@@ -37,7 +46,6 @@ class ColorFormatter(logging.Formatter):
 
         return message
 
-
 def _get_formatter(is_local, fmt, datefmt):
     formatter_type = logging.Formatter
     if is_local and sys.stdout.isatty():
@@ -48,9 +56,9 @@ def _get_formatter(is_local, fmt, datefmt):
         datefmt=datefmt,
     )
 
-def _record_factory(*args, app, hostname, pid, **kwargs):
+def _record_factory(*args, app, **kwargs):
     record = old_factory(*args, **kwargs)
-    record.request_info = f"[{hostname}:{pid}] "
+    record.request_info = f"[{hostname_pid['hostname']}:{hostname_pid['pid']}] "
 
     if hasattr(app.ctx, "request"):
         request = app.ctx.request.get(None)
@@ -64,6 +72,10 @@ def _record_factory(*args, app, hostname, pid, **kwargs):
 
 
 def setup_logging(app: Sanic, setup_factory: bool = True):
+
+    global _pid, _hostname
+    _pid = os.getpid()
+    _hostname = socket.gethostname()
 
     log_config = app.config.get("log", defaultdict(dict))
 
@@ -94,7 +106,7 @@ def setup_logging(app: Sanic, setup_factory: bool = True):
         app_logger.addHandler(file_handler)
 
     if setup_factory:
-        logging.setLogRecordFactory(partial(_record_factory, app=app, pid=_pid, hostname=_hostname))
+        logging.setLogRecordFactory(partial(_record_factory, app=app))
 
 def set_logger_level(app: Sanic, log_level):
 

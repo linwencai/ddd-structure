@@ -14,8 +14,6 @@ from diting.core.common.log import setup_logging
 from diting.core.module.module import setup_modules
 from diting.core.common.request_id import CustomRequest
 from diting.config import APP_CONFIG, SANIC_CONFIG
-from diting.core.common.log import app_logger as logger
-
 
 APPNAME = APP_CONFIG['APP']
 
@@ -50,6 +48,8 @@ def create_app(module_names: Optional[Sequence[str]] = None) -> Sanic:
     app.config.STATIC_DIR=Path(__file__).parent / "static"
 
     setup_logging(app)
+    from diting.core.common.log import log_update_hostname_pid
+    log_update_hostname_pid()
     setup_modules(app, *module_names)
 
     return app
@@ -58,10 +58,9 @@ app = create_app()
 
 @app.get("/config")
 async def get_config(request):
-    import logging
+    from diting.core.common.log import app_logger as logger
     logger.info(APP_CONFIG)
     return json(APP_CONFIG)
-
 
 
 if __name__ == "__main__":
