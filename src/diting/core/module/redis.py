@@ -21,10 +21,19 @@ def get_redis_dsn(config):
 async def setup_redis(app: Sanic, _) -> None:
     dsn, options = get_redis_dsn(app.config.get("redis"))
     app.ctx.redis = aioredis.from_url(dsn, **options)
-    ping = await app.ctx.redis.ping()
+    await app.ctx.redis.ping()
     logger.info(f"connect to redis successfully!")
-
 
 @app.after_server_stop
 async def shutdown_redis(app: Sanic, _) -> None:
-    await app.ctx.redis_pool.disconnect()
+    await app.ctx.redis.close()
+
+async def reconnect_redis(app: Sanic):
+
+    if hasattr(app.ctx, "redis"):
+        app.ctx.redis.close()
+
+    dsn, options = get_redis_dsn(app.config.get("redis"))
+    app.ctx.redis = aioredis.from_url(dsn, **options)
+    await app.ctx.redis.ping()
+    logger.info(f"reconnect to redis successfully!")

@@ -13,6 +13,7 @@ db=0
 username=""
 password=""
 max_connections=12
+socket_connect_timeout=5
 health_check_interval=60 # 设置成比redis生产超时时间短即可
 
 [database]

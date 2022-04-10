@@ -1,14 +1,14 @@
-from email.policy import default
 import logging
 import sys
-import aioredis
+import socket
+import os
 from functools import partial
 from collections import defaultdict
 
 from sanic import Sanic
 from sanic.log import access_logger, error_logger, logger
 
-app_logger = logging.getLogger("diting")
+app_logger = logging.getLogger("app")
 
 DEFAULT_LOGGING_FORMAT = (
     "[%(asctime)s.%(msecs)03d] [%(levelname)s] [%(filename)s:%(lineno)s] "
@@ -17,6 +17,8 @@ DEFAULT_LOGGING_FORMAT = (
 DEFAULT_LOGGING_DATEFORMAT = "%Y-%m-%d %H:%M:%S %z"
 old_factory = logging.getLogRecordFactory()
 
+_pid = os.getpid()
+_hostname = socket.gethostname()
 
 class ColorFormatter(logging.Formatter):
     COLORS = {
@@ -46,15 +48,17 @@ def _get_formatter(is_local, fmt, datefmt):
         datefmt=datefmt,
     )
 
-def _record_factory(*args, app, **kwargs):
+def _record_factory(*args, app, hostname, pid, **kwargs):
     record = old_factory(*args, **kwargs)
-    record.request_info = ""
+    record.request_info = f"[{hostname}:{pid}] "
 
     if hasattr(app.ctx, "request"):
         request = app.ctx.request.get(None)
         if request:
-            display = " ".join([str(request.id), request.method, request.path])
-            record.request_info = f"[{display}] "
+            # TODO 显示 request id， 先停用
+            #display = " ".join([str(request.id), request.method, request.path])
+            display = " ".join([request.method, request.path])
+            record.request_info += f" [{display}] "
 
     return record
 
@@ -90,12 +94,12 @@ def setup_logging(app: Sanic, setup_factory: bool = True):
         app_logger.addHandler(file_handler)
 
     if setup_factory:
-        logging.setLogRecordFactory(partial(_record_factory, app=app))
+        logging.setLogRecordFactory(partial(_record_factory, app=app, pid=_pid, hostname=_hostname))
 
 def set_logger_level(app: Sanic, log_level):
 
     log_level_name = logging.getLevelName(log_level)
     for lggr in (app_logger, access_logger, logger, error_logger):
-        lggr.warning(f"switch log-level to {log_level_name}")
+        lggr.warning(f"{lggr.name} switch log-level to {log_level_name}")
         lggr.setLevel(log_level)
     app.config.get("log")['level'] = log_level
