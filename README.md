@@ -14,7 +14,7 @@ cd src/
 ```
 
 ```bash
-sanic --host=0.0.0.0 --port=7777 --worker=1 diting.server.create_app
+sanic --host=0.0.0.0 --port=7777 --worker=1 diting.server.app
 ```
 
 ### 调试启动
