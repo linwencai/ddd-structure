@@ -1,9 +1,8 @@
-import logging
 import traceback
 from sanic import Request, Sanic, exceptions, json
+from diting.core.common.log import app_logger as logger
 
 app = Sanic.get_app()
-logger = logging.getLogger("diting")
 
 
 def format_exception(exception: Exception):

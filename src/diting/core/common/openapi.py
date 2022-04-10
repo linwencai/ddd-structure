@@ -1,7 +1,6 @@
 import pydantic
-import logging
 from dataclasses import make_dataclass,field
-logger = logging.getLogger("diting")
+from diting.core.common.log import app_logger as logger
 
 
 def openapi_response_wrapper(model):

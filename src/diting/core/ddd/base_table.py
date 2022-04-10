@@ -1,5 +1,3 @@
-import logging
-from copyreg import constructor
 from sqlalchemy.orm import declarative_base
 
 # ----------------------ORM------------------------------------- #
