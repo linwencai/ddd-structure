@@ -11,3 +11,4 @@ def setup_modules(app: Sanic, *module_names: str) -> None:
         module = import_module(module_name)
         if bp := getattr(module, "bp", None):
             app.blueprint(bp)
+            

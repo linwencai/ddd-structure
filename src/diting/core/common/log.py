@@ -17,17 +17,17 @@ DEFAULT_LOGGING_FORMAT = (
 DEFAULT_LOGGING_DATEFORMAT = "%Y-%m-%d %H:%M:%S %z"
 old_factory = logging.getLogRecordFactory()
 
-hostname_pid = {
+_hostname_pid = {
     "pid" : os.getpid(),
     "hostname" : os.getpid()
 }
 
 def log_update_hostname_pid():
-    global hostname_pid
-    hostname_pid = {
-    "pid" : os.getpid(),
-    "hostname" : os.getpid()
-}
+    global _hostname_pid
+    _hostname_pid = {
+        "pid" : os.getpid(),
+        "hostname" : socket.gethostname()
+    }
 
 class ColorFormatter(logging.Formatter):
     COLORS = {
@@ -58,7 +58,7 @@ def _get_formatter(is_local, fmt, datefmt):
 
 def _record_factory(*args, app, **kwargs):
     record = old_factory(*args, **kwargs)
-    record.request_info = f"[{hostname_pid['hostname']}:{hostname_pid['pid']}] "
+    record.request_info = f"[{_hostname_pid['hostname']}:{_hostname_pid['pid']}] "
 
     if hasattr(app.ctx, "request"):
         request = app.ctx.request.get(None)
@@ -72,10 +72,6 @@ def _record_factory(*args, app, **kwargs):
 
 
 def setup_logging(app: Sanic, setup_factory: bool = True):
-
-    global _pid, _hostname
-    _pid = os.getpid()
-    _hostname = socket.gethostname()
 
     log_config = app.config.get("log", defaultdict(dict))
 

@@ -48,8 +48,6 @@ def create_app(module_names: Optional[Sequence[str]] = None) -> Sanic:
     app.config.STATIC_DIR=Path(__file__).parent / "static"
 
     setup_logging(app)
-    from diting.core.common.log import log_update_hostname_pid
-    log_update_hostname_pid()
     setup_modules(app, *module_names)
 
     return app

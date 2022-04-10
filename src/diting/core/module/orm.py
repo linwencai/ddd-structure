@@ -6,6 +6,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, Session
 from diting.core.common.context import base_model_session_ctx
 from diting.lrm.adapter import table_schema
+from diting.core.common.log import log_update_hostname_pid
 
 app = Sanic.get_app()
 
@@ -34,6 +35,7 @@ def get_orm_dsn(options):
 async def setup_orm_engine(app: Sanic, _) -> None:
     dsn = get_orm_dsn(app.config.get("database"))
     app.ctx.orm_engine = create_async_engine(dsn)
+    log_update_hostname_pid()
     # app.ctx.orm_engine = create_engine(dsn)
 
 
