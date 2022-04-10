@@ -15,7 +15,7 @@ from sanic import Sanic
 
 _app = Sanic.get_app()
 _id_generator_config = _app.config.get("id-generator", {})
-if _id_generator_config.get("method", "uuid"):
+if _id_generator_config.get("method", "uuid") == "uuid":
     id_generator = lambda : str(uuid.uuid4())
 else:
     from diting.core.module.snowflake import generate_snowflake_id
