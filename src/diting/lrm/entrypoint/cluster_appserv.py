@@ -1,4 +1,3 @@
-import logging
 from diting.lrm.service.cluster_service import ClusterService
 from diting.lrm.message.request import ClusterCreatingRequest, ClusterUpdatingRequest, ClusterListingRequest
 from diting.lrm.message.response import ClusterResponse, ClusterListResponse

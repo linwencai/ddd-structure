@@ -1,4 +1,3 @@
-import logging
 import copy
 import aioredis
 from sanic import Sanic
