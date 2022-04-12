@@ -1,5 +1,5 @@
 src/diting/alembic/versions/*
-
+src/diting/settings-dev.toml
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
