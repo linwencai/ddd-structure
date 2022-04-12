@@ -25,44 +25,30 @@ async def create_cluster(request: Request, body: ClusterCreatingRequest):
     app_service = cluster_appserv.ClusterAppService()
     cluster_response = await app_service.create_cluster(body)
     if cluster_response:
-        return cluster_response.to_json()
+        return cluster_response
     else:
         return {}
 
 
-# @bp.delete("/cluster/delete")
+
+
+# @bp.post("/cluster/update")
 # @openapi.definition(
-#     summary="删除 cluster",
+#     body=RequestBody(ClusterUpdatingRequest, required=True),
+#     summary="修改 cluster",
 #     tag="cluster",
 #     response=[Response(Wrap(ClusterResponse), status=200)],
 # )
-# async def delete_cluster(request: Request, cluster_id: int) -> HTTPResponse:
-#     body = ClusterUpdatingRequest(is_alive=False)
+# @validate(json=ClusterUpdatingRequest)
+# @serializer(message)
+# async def update_cluster(request: Request, body: ClusterUpdatingRequest):
 #     app_service = cluster_appserv.ClusterAppService()
+#     cluster_id = body.id
 #     cluster_response = await app_service.update_cluster(cluster_id, body)
 #     if cluster_response:
-#         return json(cluster_response.to_json())
+#         return cluster_response.to_json()
 #     else:
-#         return json({})
-
-
-@bp.post("/cluster/update")
-@openapi.definition(
-    body=RequestBody(ClusterUpdatingRequest, required=True),
-    summary="修改 cluster",
-    tag="cluster",
-    response=[Response(Wrap(ClusterResponse), status=200)],
-)
-@validate(json=ClusterUpdatingRequest)
-@serializer(message)
-async def update_cluster(request: Request, body: ClusterUpdatingRequest):
-    app_service = cluster_appserv.ClusterAppService()
-    cluster_id = body.id
-    cluster_response = await app_service.update_cluster(cluster_id, body)
-    if cluster_response:
-        return cluster_response.to_json()
-    else:
-        return {}
+#         return {}
 
 
 @bp.get("/cluster")
@@ -78,7 +64,7 @@ async def get_cluster(request: Request):
     cluster_id = request.args.get("id")
     cluster_response = await app_service.get_cluster_by_id(cluster_id)
     if cluster_response:
-        return cluster_response.to_json()
+        return cluster_response
     else:
         return {}
 

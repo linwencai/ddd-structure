@@ -1,8 +1,10 @@
+from dataclasses import asdict
 from diting.lrm.service.cluster_service import ClusterService
 from diting.lrm.message.request import ClusterCreatingRequest, ClusterUpdatingRequest, ClusterListingRequest
 from diting.lrm.message.response import ClusterResponse, ClusterListResponse
 
 from diting.core.common.log import app_logger as logger
+from diting.lrm.domain.cluster_model import ClusterModel
 
 
 class AppService:
@@ -24,8 +26,12 @@ class ClusterAppService:
     
     async def create_cluster(self, create_cluster_request: ClusterCreatingRequest):
         try:
-            cluster = await self.domainservice.create_cluster(create_cluster_request)
-            return ClusterResponse.make_from_domain(cluster)
+            async with self.domainservice.session.begin():
+                cluster_model = ClusterModel(**create_cluster_request.dict())
+                await self.domainservice.create_cluster(cluster_model)
+            j = asdict(cluster_model)
+            j.pop("kube_config")
+            return ClusterResponse(**j)
         except Exception as err:
             logger.exception("Exception:%s", err)
             return
@@ -33,11 +39,11 @@ class ClusterAppService:
     async def get_cluster_by_id(self, cluster_id: str):
         # get 逻辑，直接在appservice 通过仓库拿
         cluster = await self.domainservice.repository.get(cluster_id)
-        return ClusterResponse.make_from_domain(cluster)
+        return asdict(ClusterResponse(**asdict(cluster)))
 
-    async def update_cluster(self, cluster_id, update_cluster_request: ClusterUpdatingRequest):
-        cluster = await self.domainservice.update_cluster(cluster_id, update_cluster_request)
-        return ClusterResponse.make_from_domain(cluster)
+    # async def update_cluster(self, cluster_id, update_cluster_request: ClusterUpdatingRequest):
+    #     cluster = await self.domainservice.update_cluster(cluster_id, update_cluster_request)
+    #     return ClusterResponse.make_from_domain(cluster)
 
 
     # async def get_cluster_list(self, list_request: ClusterListingRequest):

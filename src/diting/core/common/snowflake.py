@@ -2,11 +2,6 @@ from time import time
 from random import randint
 from datetime import datetime
 
-from sanic import Sanic
-from diting.core.common.log import app_logger as logger
-
-app = Sanic.get_app()
-
 _candicates = "0123456789ABCDEFGHJKMNPRSTUVWXYZ"
 
 _index_char_map = {index:value for index, value in enumerate(_candicates)}
@@ -61,24 +56,7 @@ class SnowflakeGenerator:
         }
 
 __instance_num__ = randint(0, 1023)
-__sf__ = SnowflakeGenerator(__instance_num__)
-
-@app.after_server_start
-async def init_snowflake_id(app: Sanic, _) -> None:
-    global __instance_num__
-    global __sf__
-
-    if hasattr(app.ctx, "redis"):
-        redis = app.ctx.redis
-        logger.info("Using redis to generate unique snowflake instance")
-        try:
-            __instance_num__ = await redis.incr("__snowflake_instance_num__")
-        except:
-            logger.error("setup snowflake-redis failed, due to redis error")
-        __sf__.set_instance(__instance_num__)
-    else:
-        logger.info("Using default unique snowflake instance")
-    logger.info(f"snowflake instance {__instance_num__}, next id is {generate_snowflake_id()}")
+snowflake = SnowflakeGenerator(__instance_num__)
 
 def generate_snowflake_id():
-    return next(__sf__)
+    return next(snowflake)

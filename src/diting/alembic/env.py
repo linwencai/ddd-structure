@@ -29,8 +29,8 @@ if config.config_file_name is not None:
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
 import diting.lrm.adapter.table_schema
-from diting.core.ddd.base_table import Base
-target_metadata = Base.metadata
+from diting.core.ddd.base_table import metadata_obj
+target_metadata = metadata_obj
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
