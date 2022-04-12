@@ -71,7 +71,10 @@ async def init_snowflake_id(app: Sanic, _) -> None:
     if hasattr(app.ctx, "redis"):
         redis = app.ctx.redis
         logger.info("Using redis to generate unique snowflake instance")
-        __instance_num__ = await redis.incr("__snowflake_instance_num__")
+        try:
+            __instance_num__ = await redis.incr("__snowflake_instance_num__")
+        except:
+            logger.error("setup snowflake-redis failed, due to redis error")
         __sf__.set_instance(__instance_num__)
     else:
         logger.info("Using default unique snowflake instance")

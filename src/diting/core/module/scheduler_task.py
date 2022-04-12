@@ -20,13 +20,11 @@ async def check_log_level(app: Sanic):
 
     try:
         new_log_level = await redis.get(key)
+        if(new_log_level):
+            if current_log_level != int(new_log_level):
+                set_logger_level(app, int(new_log_level))
     except Exception as e:
         logger.error("can't connect to redis, please check!")
-
-    if(new_log_level):
-        if current_log_level != int(new_log_level):
-            set_logger_level(app, int(new_log_level))
-
 
 @scheduler_at("interval", seconds=10, id="check_redis_connection")
 async def check_redis_connection(app: Sanic):
@@ -36,8 +34,10 @@ async def check_redis_connection(app: Sanic):
 
     try:
         await app.ctx.redis.ping()
+        app.ctx.redis_status = "running"
     except Exception as e:
         try:
             await reconnect_redis(app)
         except:
-            logger.error("reconnect to redis failed!")
+            logger.error(f"reconnect to redis {str(app.ctx.redis)} failed!")
+            app.ctx.redis_status = "error"
