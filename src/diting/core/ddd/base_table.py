@@ -1,5 +1,3 @@
-import logging
-from copyreg import constructor
 from sqlalchemy.orm import declarative_base
 
 # ----------------------ORM------------------------------------- #
@@ -10,7 +8,9 @@ class TableBase(Base):
 
     @classmethod
     def get_columnset(cls): 
-        return set([attr for attr in dir(cls) if not attr.startswith("_") and not attr in ("metadata", "registry") and not callable(getattr(cls, attr))])
+        return set([attr for attr in dir(cls) if not attr.startswith("_")
+                    and attr not in ("metadata", "registry")
+                    and not callable(getattr(cls, attr))])
     
     @classmethod
     def from_dict(cls, kwargs):

@@ -1,8 +1,12 @@
-import logging
+import traceback
 from sanic import Request, Sanic, exceptions, json
+from diting.core.common.log import app_logger as logger
 
 app = Sanic.get_app()
-logger = logging.getLogger("diting")
+
+
+def format_exception(exception: Exception):
+    return traceback.format_exception(type(exception), exception, exception.__traceback__)
 
 
 @app.exception(exceptions.NotFound)
@@ -14,7 +18,16 @@ async def not_fount(request: Request, exception: exceptions.SanicException):
     :return:
     """
     logger.error(f"not_fount request=%s exception=%s", request, exception)
-    return json({"code": 404, "detail": str(exception), "data":{}, "message" : "not fund"}, 404)
+    status_code = 404
+    return json(
+        {
+            "code": status_code,
+            "detail": format_exception(exception),
+            "data": {},
+            "msg": "not found",
+        },
+        status_code
+    )
 
 
 @app.exception(exceptions.SanicException)
@@ -30,7 +43,15 @@ async def sanic_exception(request: Request, exception: exceptions.SanicException
         logger.error(f"sanic_exception request=%s, exception=%s", request, exception)
     else:
         logger.exception(f"sanic_exception request=%s, exception=%s", request, exception)
-    return json({"status": status_code, "message": str(exception)}, status_code)
+    return json(
+        {
+            "code": status_code,
+            "detail": format_exception(exception),
+            "data": {},
+            "msg": str(exception),
+        },
+        status_code,
+    )
 
 
 @app.exception(Exception)
@@ -43,4 +64,12 @@ async def base_exception(request: Request, exception: Exception):
     """
     logger.exception(f"base_exception request=%s, exception=%s", request, exception)
     status_code = 500
-    return json({"status": status_code, "message": str(exception)}, status_code)
+    return json(
+        {
+            "code": status_code,
+            "detail": format_exception(exception),
+            "data": {},
+            "msg": str(exception),
+        },
+        status_code,
+    )
