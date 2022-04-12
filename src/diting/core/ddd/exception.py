@@ -4,10 +4,8 @@ from diting.core.common.log import app_logger as logger
 
 app = Sanic.get_app()
 
-
 def format_exception(exception: Exception):
     return traceback.format_exception(type(exception), exception, exception.__traceback__)
-
 
 @app.exception(exceptions.NotFound)
 async def not_fount(request: Request, exception: exceptions.SanicException):

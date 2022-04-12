@@ -7,7 +7,7 @@ encode_secret_key="ZmludGVjaC1mdGMtZGlweHh4eHh4eHh4eHh4eHh4eHg="  # 上述两个
 dsn="{schema}://{host}"
 type="Single" # Single, Sentinel
 schema="redis"  # redis://, rediss://, unix://
-host="ubuntu"  # 以下变量部分将覆盖dsn部分参数
+host="localhost"  # 以下变量部分将覆盖dsn部分参数
 port=6379
 db=0
 username=""

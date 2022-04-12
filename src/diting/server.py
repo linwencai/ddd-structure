@@ -18,7 +18,7 @@ from diting.config import APP_CONFIG, SANIC_CONFIG
 APPNAME = APP_CONFIG['APP']
 
 DEFAULT: Tuple[str, ...] = (
-    "diting.core.common.context",
+    "diting.core.module.misc",
     "diting.core.module.orm",
     "diting.core.ddd.exception",
     "diting.core.module.redis",
