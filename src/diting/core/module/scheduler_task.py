@@ -1,6 +1,5 @@
 # 封装系统调用的一些逻辑
 from diting.core.common.log import app_logger as logger
-from pymysql import Time
 from sanic import Sanic
 from diting.core.common.log import set_logger_level
 from diting.core.common.log import app_logger as logger

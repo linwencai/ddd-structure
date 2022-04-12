@@ -6,7 +6,6 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, Session
 from diting.core.common.context import base_model_session_ctx
 from diting.lrm.adapter import table_schema
-from diting.core.common.log import log_update_hostname_pid
 
 app = Sanic.get_app()
 
@@ -35,7 +34,6 @@ def get_orm_dsn(options):
 async def setup_orm_engine(app: Sanic, _) -> None:
     dsn = get_orm_dsn(app.config.get("database"))
     app.ctx.orm_engine = create_async_engine(dsn)
-    log_update_hostname_pid()
     # app.ctx.orm_engine = create_engine(dsn)
 
 
@@ -49,7 +47,6 @@ async def inject_session(request):
     request.ctx.orm_session = sessionmaker(app.ctx.orm_engine, AsyncSession, expire_on_commit=False)()
     # request.ctx.orm_session = sessionmaker(app.ctx.orm_engine, Session, expire_on_commit=False)()
     request.ctx.orm_session_ctx_token = base_model_session_ctx.set(request.ctx.orm_session)
-
 
 @app.on_response
 async def close_session(request, response):

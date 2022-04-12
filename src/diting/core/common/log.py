@@ -66,7 +66,7 @@ def _record_factory(*args, app, **kwargs):
             # TODO 显示 request id， 先停用
             #display = " ".join([str(request.id), request.method, request.path])
             display = " ".join([request.method, request.path])
-            record.request_info += f" [{display}] "
+            record.request_info += f"[{display}] "
 
     return record
 
