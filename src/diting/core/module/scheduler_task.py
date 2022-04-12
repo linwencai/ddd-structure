@@ -1,6 +1,5 @@
 # 封装系统调用的一些逻辑
-from diting.core.common.log import app_logger as logger
-from pymysql import Time
+import logging
 from sanic import Sanic
 from diting.core.common.log import set_logger_level
 from diting.core.common.log import app_logger as logger
@@ -39,6 +38,6 @@ async def check_redis_connection(app: Sanic):
         await app.ctx.redis.ping()
     except Exception as e:
         try:
-            reconnect_redis(app)
+            await reconnect_redis(app)
         except:
             logger.error("reconnect to redis failed!")

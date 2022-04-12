@@ -23,6 +23,11 @@ sanic --host=0.0.0.0 --port=7777 --worker=1 diting.server.app
 python -m sanic --dev diting.server.app
 ```
 
+### 本地开发环境的配置文件
+1. 新建 src/diting/settings-dev.toml
+2. 写入需要调整的配置
+
+
 ### swagger
 
 san-ext 中，swagger 需要连接一个cdn, 请直接使用我修改的代码：
