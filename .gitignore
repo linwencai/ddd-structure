@@ -4,6 +4,7 @@ src/diting/settings-dev.toml
 __pycache__/
 *.py[cod]
 *$py.class
+*.tmp
 
 # log file
 *.log*

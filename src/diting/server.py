@@ -28,6 +28,8 @@ DEFAULT: Tuple[str, ...] = (
 # 全局注入了：
 # app.ctx.redis
 # app.ctx.orm_session
+
+
 def create_app(module_names: Optional[Sequence[str]] = None) -> Sanic:
     """
     Application factory: responsible for gluing all of the pieces of the
@@ -43,14 +45,16 @@ def create_app(module_names: Optional[Sequence[str]] = None) -> Sanic:
     app = Sanic(APPNAME, request_class=CustomRequest)
     app.config.update(APP_CONFIG)
     app.config.update(SANIC_CONFIG)
-    app.config.STATIC_DIR=Path(__file__).parent / "static"
+    app.config.STATIC_DIR = Path(__file__).parent / "static"
 
     setup_logging(app)
     setup_modules(app, *module_names)
 
     return app
 
+
 app = create_app()
+
 
 @app.get("/config")
 async def get_config(request):
