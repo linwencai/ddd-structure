@@ -54,3 +54,10 @@ async def close_session(request, response):
         base_model_session_ctx.reset(request.ctx.orm_session_ctx_token)
         await request.ctx.orm_session.close()
         # request.ctx.orm_session.close()
+
+# ----------------------------------------------------------- #
+from diting.lrm.domain.cluster_model import ClusterModel
+from diting.core.ddd.base_table import mapper_registry
+from diting.lrm.adapter.table_schema import cluster_table
+
+mapper_registry.map_imperatively(ClusterModel, cluster_table)

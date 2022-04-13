@@ -32,6 +32,13 @@ import diting.lrm.adapter.table_schema
 from diting.core.ddd.base_table import metadata_obj
 target_metadata = metadata_obj
 
+compare_type=True
+
+if config.get_main_option("sqlalchemy.url").startswith("sqlite"):
+    render_as_batch=True
+else:
+    render_as_batch=False
+
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
 # my_important_option = config.get_main_option("my_important_option")
@@ -55,6 +62,8 @@ def run_migrations_offline():
         url=url,
         target_metadata=target_metadata,
         literal_binds=True,
+        compare_type=compare_type,
+        render_as_batch=render_as_batch,
         dialect_opts={"paramstyle": "named"},
     )
 
@@ -77,7 +86,10 @@ def run_migrations_online():
 
     with connectable.connect() as connection:
         context.configure(
-            connection=connection, target_metadata=target_metadata
+            connection=connection, 
+            target_metadata=target_metadata, 
+            compare_type=compare_type,
+            render_as_batch=render_as_batch
         )
 
         with context.begin_transaction():

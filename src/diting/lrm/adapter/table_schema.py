@@ -1,7 +1,6 @@
 from sqlalchemy import Column, Integer, String, TIMESTAMP, Boolean, text, func, Text, Table
-from diting.core.ddd.base_table import mapper_registry, metadata_obj
+from diting.core.ddd.base_table import metadata_obj
 
-from diting.lrm.domain.cluster_model import ClusterModel
 
 cluster_table = Table(
     "cluster",
@@ -15,11 +14,9 @@ cluster_table = Table(
     Column("type", String(16), default="native", comment="集群类别， [native, kaiyang]"),
     Column("cpu_value", Integer, default=0, comment="cpu 配额"),
     Column("memory_value", Integer, default=0, comment="memory 配额"),
-    Column("ingress_host", String(64), comment="ingress 域名"),
+    Column("ingress_host", String(128), default="", comment="ingress 域名"),
     Column("ingress_port", Integer, default=80, comment="ingress 端口"),
     Column("kube_config", Text, default="", comment="K8S 连接串"),
-    Column("harbor_url", String, default="", comment="harbor url"),
-    Column("harbor_secret", String, default="", comment="harbor secret")
+    Column("harbor_url", String(128), default="", comment="harbor url"),
+    Column("harbor_secret", String(64), default="", comment="harbor secret")
 )
-
-mapper_registry.map_imperatively(ClusterModel, cluster_table)
