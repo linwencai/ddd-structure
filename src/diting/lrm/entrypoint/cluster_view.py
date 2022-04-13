@@ -12,7 +12,7 @@ from diting.lrm.message.response import ClusterResponse, ClusterListResponse
 
 bp = Blueprint("resourcemanager", url_prefix="/lrm")
 
-@bp.post("/cluster/create")
+@bp.post("/cluster/create")  # type: ignore
 @openapi.definition(
     body=RequestBody(ClusterCreatingRequest, required=True),
     summary="创建 cluster",
@@ -48,7 +48,7 @@ async def create_cluster(request: Request, body: ClusterCreatingRequest):
 #         return {}
 
 
-@bp.get("/cluster")
+@bp.get("/cluster")  # type: ignore
 @openapi.definition(
     parameter=Parameter("get_cluster", ClusterGetingRequest, required=True),
     summary="查询单个 cluster",

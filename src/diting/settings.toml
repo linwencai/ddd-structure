@@ -24,6 +24,11 @@ password="ENC(gAAAAABiP_eVv_nH8GuTs0-cPw99kxd_r5FuHCVHmc0N2VjLpGwT041uoRs5mFnJIG
 host="127.0.0.1"
 port=3306
 database="/diting/sqlite.db"  # 数据库库表或sqlite的db路径
+echo=true
+charset="utf8mb4"
+pool_size=10
+max_overflow=5
+pool_recycle=3600 # 要比sql wait_timeout 小
 
 [id-generator]
 method="snowflake" # uuid, or snowflake
