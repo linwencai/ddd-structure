@@ -57,7 +57,7 @@ async def close_session(request, response):
 
 # ----------------------------------------------------------- #
 from diting.lrm.domain.cluster_model import ClusterModel
-from diting.core.ddd.base_table import mapper_registry
+from diting.core.base.table import mapper_registry
 from diting.lrm.adapter.table_schema import cluster_table
 
 mapper_registry.map_imperatively(ClusterModel, cluster_table)

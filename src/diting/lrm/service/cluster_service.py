@@ -1,30 +1,23 @@
-"""
-
-"""
-from diting.core.ddd.base_value import DomainService
-from diting.lrm.adapter.cluster_repository import ClusterRepository
-from diting.lrm.message.request import ClusterCreatingRequest, ClusterUpdatingRequest, ClusterListingRequest
+from diting.core.base.service import ServiceBase
+from diting.lrm.adapter.model_repository import ClusterRepository
+from diting.lrm.message.request import ClusterGetingRequest, ClusterCreatingRequest, ClusterUpdatingRequest, ClusterListingRequest
 from diting.lrm.domain.cluster_model import ClusterModel
+from diting.lrm.message.response import ClusterResponse
 
-class ClusterService(DomainService):
-
+class ClusterService(ServiceBase):
     def __init__(self):
-        self.repository = ClusterRepository(self.session)
-        # TODO
-        # self.UOF
+        self.cluster_repository: ClusterRepository = ClusterRepository(self.session)
 
-    async def create_cluster(self, model: ClusterModel):
-        return await self.repository.add(model)
+    async def create_cluster(self, create_cluster_request: ClusterCreatingRequest):
 
-    async def get_cluster_by_id(self, cluster_id: str):
-        return await self.repository.get(cluster_id)
+        async with self.session.begin():
+            cluster_model_creating = ClusterModel.from_dict(**create_cluster_request.dict())
+            cluster_model_created = await self.cluster_repository.add(cluster_model_creating)
 
-    # async def update_cluster(self, cluster_id, update_cluster_request: ClusterUpdatingRequest):
+        return ClusterResponse.from_domain(cluster_model_created)
 
-    #     changed_value = update_cluster_request.dict()
-    #     changed_value.pop('id')
+    async def get_cluster_by_id(self, id: str):
+        cluster_model =  await self.cluster_repository.get(id)
 
-    #     return await self.repository.update(cluster_id, changed_value)
-
-    # async def get_cluster_list(self, list_request: ClusterListingRequest):
-    #     return await self.repository.list(list_request)
+        return ClusterResponse.from_domain(cluster_model)
+ 

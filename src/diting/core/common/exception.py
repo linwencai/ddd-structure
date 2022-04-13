@@ -15,7 +15,7 @@ async def not_fount(request: Request, exception: exceptions.SanicException):
     :param exception:
     :return:
     """
-    logger.error(f"not_fount request=%s exception=%s", request, exception)
+    logger.warning(f"not_fount request=%s exception=%s", request, exception)
     status_code = 404
     return json(
         {
@@ -50,7 +50,6 @@ async def sanic_exception(request: Request, exception: exceptions.SanicException
         },
         status_code,
     )
-
 
 @app.exception(Exception)
 async def base_exception(request: Request, exception: Exception):

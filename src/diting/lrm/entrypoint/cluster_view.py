@@ -6,7 +6,7 @@ from sanic_ext.extensions.openapi.definitions import RequestBody, Response, Para
 from diting.core.common.log import app_logger as logger
 from diting.core.common.openapi import openapi_response_wrapper as Wrap
 from diting.core.common.serializer import message
-from diting.lrm.entrypoint import cluster_appserv
+from diting.lrm.service import cluster_service
 from diting.lrm.message.request import ClusterCreatingRequest, ClusterUpdatingRequest, ClusterListingRequest, ClusterGetingRequest
 from diting.lrm.message.response import ClusterResponse, ClusterListResponse
 
@@ -22,12 +22,9 @@ bp = Blueprint("resourcemanager", url_prefix="/lrm")
 @validate(json=ClusterCreatingRequest)
 @serializer(message)
 async def create_cluster(request: Request, body: ClusterCreatingRequest):
-    app_service = cluster_appserv.ClusterAppService()
-    cluster_response = await app_service.create_cluster(body)
-    if cluster_response:
-        return cluster_response
-    else:
-        return {}
+
+    service = cluster_service.ClusterService()
+    return await service.create_cluster(body)
 
 
 
@@ -60,13 +57,10 @@ async def create_cluster(request: Request, body: ClusterCreatingRequest):
 )
 @serializer(message)
 async def get_cluster(request: Request):
-    app_service = cluster_appserv.ClusterAppService()
+    service = cluster_service.ClusterService()
     cluster_id = request.args.get("id")
-    cluster_response = await app_service.get_cluster_by_id(cluster_id)
-    if cluster_response:
-        return cluster_response
-    else:
-        return {}
+    return await service.get_cluster_by_id(cluster_id)
+
 
 
 # @bp.get("/cluster/list")

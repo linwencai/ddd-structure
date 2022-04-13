@@ -60,3 +60,11 @@ snowflake = SnowflakeGenerator(__instance_num__)
 
 def generate_snowflake_id():
     return next(snowflake)
+
+from diting.config import APP_CONFIG
+
+if APP_CONFIG['id-generator'].get("method", "") == "snowflake":
+    id_generator = generate_snowflake_id
+else:
+    import uuid
+    id_generator = lambda: str(uuid.uuid4())

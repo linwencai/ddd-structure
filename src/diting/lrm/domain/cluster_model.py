@@ -1,15 +1,17 @@
 from dataclasses import dataclass, field
 from datetime import datetime
+from typing import Optional
 
-from diting.core.ddd.base_model import BusinessModelBase
+from diting.core.base.model import BusinessModelBase
+
 @dataclass
 class ClusterModel(BusinessModelBase):
 
-    type: str = None
-    cpu_value: int = None
-    memory_value: int = None
-    ingress_host: str = None
-    ingress_port: int = None
-    kube_config: str = None
-    harbor_url: str = None
-    harbor_secret: str = None
+    type: Optional[str] = None
+    cpu_value: Optional[int] = None
+    memory_value: Optional[int] = None
+    ingress_host: Optional[str] = None
+    ingress_port: Optional[int] = None
+    kube_config: Optional[str] = None
+    harbor_url: Optional[str] = None
+    harbor_secret: Optional[str] = None

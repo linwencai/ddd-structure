@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, String, TIMESTAMP, Boolean, text, func, Text, Table
-from diting.core.ddd.base_table import metadata_obj
+from diting.core.base.table import metadata_obj
 
 
 cluster_table = Table(

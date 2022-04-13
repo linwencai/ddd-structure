@@ -29,11 +29,13 @@ if config.config_file_name is not None:
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
 import diting.lrm.adapter.table_schema
-from diting.core.ddd.base_table import metadata_obj
+from diting.core.base.table import metadata_obj
 target_metadata = metadata_obj
 
+# 比较列变动
 compare_type=True
 
+# 为 sqlite 特别写法
 if config.get_main_option("sqlalchemy.url").startswith("sqlite"):
     render_as_batch=True
 else:

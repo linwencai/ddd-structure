@@ -1,21 +1,20 @@
 """
 消息契约：返回给前端的内容
 """
-from datetime import date, datetime
-from dataclasses import dataclass, field
-from typing import Any, List, Union
-import pydantic
-from diting.core.ddd.base_value import ResponseEntity
+from datetime import datetime
+from dataclasses import dataclass
+from typing import List
+from diting.core.base.message import ResponseBase
 
 @dataclass
-class ClusterResponse(ResponseEntity):
+class ClusterResponse(ResponseBase):
     id: str
     name: str
     desc: str
     alived: bool
-    ctime: str
-    mtime: str
-    type: str
+    ctime: datetime
+    mtime: datetime
+    type: datetime
     cpu_value: int
     memory_value: int
     ingress_host: str
@@ -23,6 +22,6 @@ class ClusterResponse(ResponseEntity):
     harbor_url: str
     harbor_secret: str
 
-class ClusterListResponse(ResponseEntity):
+class ClusterListResponse(ResponseBase):
     data: List[ClusterResponse]
     

@@ -20,7 +20,6 @@ APPNAME = APP_CONFIG['APP']
 DEFAULT: Tuple[str, ...] = (
     "diting.core.module.misc",
     "diting.core.module.orm",
-    "diting.core.ddd.exception",
     # "diting.core.module.redis",
     # "diting.core.module.scheduler",
     "diting.urls",

@@ -15,6 +15,7 @@ async def set_log_level(request, level:int):
 
     app : Sanic = request.app
     old_log_level = request.app.config.get("log")['level']
+    new_log_level = old_log_level
     redis = request.app.ctx.redis
 
     check_log_level_config = app.config.get("scheduler")['check_log_level']
