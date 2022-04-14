@@ -14,11 +14,10 @@ SETTINGS_DEV_FILE_PATH = _current_dir / os.environ.get("SETTINGS_DEV_FILE_NAME",
 if os.path.exists(SETTINGS_DEV_FILE_PATH):
     APP_CONFIG.update(toml.load(SETTINGS_DEV_FILE_PATH))
 
-SANIC_CONFIG = APP_CONFIG.pop("sanic")
-
 _secret_key = APP_CONFIG['secret_key']
 
 def decrypt_config(config : dict):
+    
     enc_pattern = re.compile(r'ENC\((.*)\)')
 
     for key, value in config.items():
@@ -32,4 +31,27 @@ def decrypt_config(config : dict):
         if isinstance(value, dict):
             decrypt_config(value)
 
+def parth_path(value : str) -> str:
+    path = _current_dir / value
+
+    return str(path.resolve()).replace("\\", "/")
+
+def parse_path_config(config : dict):
+    
+    enc_pattern = re.compile(r'PATH\((.*)\)')
+
+    for key, value in config.items():
+        if isinstance(value, str):
+            match = enc_pattern.match(value)
+            if match is None:
+                continue
+            relative_path = match.group(1)
+            config[key] = parth_path(relative_path)
+
+        if isinstance(value, dict):
+            parse_path_config(value)
+
 decrypt_config(APP_CONFIG)
+parse_path_config(APP_CONFIG)
+
+SANIC_CONFIG = APP_CONFIG.pop("sanic")

@@ -14,7 +14,7 @@ cd src/
 ```
 
 ```bash
-sanic --host=0.0.0.0 --port=7777 --worker=1 diting.server.app
+sanic --host=0.0.0.0 --port=8000 --worker=1 diting.server.app
 ```
 
 ### 调试启动
@@ -30,14 +30,16 @@ python -m sanic --dev diting.server.app
 
 ### swagger
 
-san-ext 中，swagger 需要连接一个cdn, 请直接使用我修改的代码：
+配置文件中，我添加了PATH 装饰，会将路径前自动拼接上项目绝对路径
 
-git clone https://github.com/SheldonXLD/sanic-ext.git
 
-python setup.py install
 
 ```
-http://localhost:7777/docs/swagger
+127.0.0.1:8000/docs
+or
+127.0.0.1:8000/docs/swagger
+of
+127.0.0.1:8000/docs/redoc
 
 ```
 

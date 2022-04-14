@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import Optional, Sequence, Tuple
 
 from sanic import Sanic
-from sanic.response import json
+from sanic.response import json, file
 # Modules imported here should NOT have a Sanic.get_app() call in the global
 # scope. Doing so will cause a circular import. Therefore, we programmatically
 # import those modules inside the create_app() factory.
@@ -42,10 +42,14 @@ def create_app(module_names: Optional[Sequence[str]] = None) -> Sanic:
 
     app = Sanic(APPNAME, request_class=CustomRequest)
     app.config.update(APP_CONFIG)
-    app.config.update(SANIC_CONFIG)
-    app.config.STATIC_DIR=Path(__file__).parent / "static"
-
     setup_logging(app)
+
+    from diting.core.common.log import app_logger as logger
+
+    app.config.update(SANIC_CONFIG)
+
+    # 静态路径，用于openapi 等内容的下载
+    app.config.STATIC_DIR=Path(__file__).parent / "static"
     setup_modules(app, *module_names)
 
     return app
@@ -58,6 +62,11 @@ async def get_config(request):
     logger.info(APP_CONFIG)
     return json(APP_CONFIG)
 
+
+@app.get("/static/openapi/<resource:str>")
+def get_openapi_resource(request, resource):
+    resource_path = app.config.STATIC_DIR / "openapi" / resource
+    return file(resource_path)
 
 if __name__ == "__main__":
     app.run(debug=True)

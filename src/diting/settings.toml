@@ -48,5 +48,7 @@ keep=30 # 保留天数
     interval=5
 
 [sanic]
-OAS_UI_DEFAULT="redoc"
-OAS_UI_SWAGGER=true
+OAS_UI_DEFAULT="swagger"
+OAS_PATH_TO_REDOC_HTML="PATH(static/openapi/redoc.html)"
+OAS_PATH_TO_SWAGGER_HTML="PATH(static/openapi/swagger.html)"
+
