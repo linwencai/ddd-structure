@@ -23,6 +23,33 @@ sanic --host=0.0.0.0 --port=8000 --worker=1 diting.server.app
 python -m sanic --dev diting.server.app
 ```
 
+### vscode 调试
+
+前提条件，ddd-structure 是vscode 打开的顶层目录
+
+新建 .vscode 目录
+
+在launch.json 文件中【无则新建一个】，贴入以下内容
+
+```json
+{
+    // 使用 IntelliSense 了解相关属性。
+    // 悬停以查看现有属性的描述。
+    // 欲了解更多信息，请访问: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [{
+            "name": "Python: 模块",
+            "type": "python",
+            "request": "launch",
+            "module": "sanic",
+            "args": ["diting.server.app"],
+            "cwd": "${cwd}/src",
+            "justMyCode": false
+        }
+    ]
+}
+```
+
 ### 本地开发环境的配置文件
 1. 新建 src/diting/settings-dev.toml
 2. 写入需要调整的配置
