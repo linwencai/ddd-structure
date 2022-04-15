@@ -1,33 +1,24 @@
 from sanic import Blueprint
 from sanic import Request
-from sanic_ext import openapi, serializer
-from sanic_ext.extensions.openapi.definitions import RequestBody, Response, Parameter
 
-from diting.core.common.validation import validate
 from diting.core.common.log import app_logger as logger
-from diting.core.common.openapi import openapi_response_wrapper as Wrap
-from diting.core.common.serializer import message
+from diting.core.common import openapi
 from diting.lrm.service import cluster_service
-from diting.lrm.message.request import ClusterCreatingRequest, ClusterUpdatingRequest, ClusterListingRequest, ClusterGetingRequest
+from diting.lrm.message.request import ClusterCreatingRequest, ClusterUpdatingRequest, ClusterListingRequest, \
+    ClusterGetingRequest
 from diting.lrm.message.response import ClusterResponse, ClusterListResponse
 
 bp = Blueprint("resourcemanager", url_prefix="/lrm")
 
+
 @bp.post("/cluster/create")  # type: ignore
 @openapi.definition(
-    body=RequestBody(ClusterCreatingRequest, required=True),
     summary="创建 cluster",
     tag="cluster",
-    response=[Response(Wrap(ClusterResponse), status=200)]
 )
-@validate(json=ClusterCreatingRequest)
-@serializer(message)
-async def create_cluster(request: Request, body: ClusterCreatingRequest):
-
+async def create_cluster(request: Request, body: ClusterCreatingRequest) -> ClusterResponse:
     service = cluster_service.ClusterService()
     return await service.create_cluster(body)
-
-
 
 
 # @bp.post("/cluster/update")
@@ -51,31 +42,21 @@ async def create_cluster(request: Request, body: ClusterCreatingRequest):
 
 @bp.get("/cluster")  # type: ignore
 @openapi.definition(
-    parameter=Parameter("get_cluster", ClusterGetingRequest, required=True),
     summary="查询单个 cluster",
     tag="cluster",
-    response=[Response(Wrap(ClusterResponse), status=200)],
 )
-@validate(query=ClusterGetingRequest)
-@serializer(message)
-async def get_cluster(request: Request, query: ClusterGetingRequest):
+async def get_cluster(request: Request, query: ClusterGetingRequest) -> ClusterResponse:
     service = cluster_service.ClusterService()
 
     return await service.get_cluster_by_id(query.id)
 
 
-
 @bp.get("/cluster/list")
 @openapi.definition(
-    parameter=Parameter("get_cluster_list", ClusterListingRequest, required=True),
     summary="获取 cluster 列表",
     tag="cluster",
-    response=[Response(Wrap(ClusterListResponse), status=200)],
 )
-@validate(query=ClusterListingRequest)
-@serializer(message)
-async def get_cluster_list(request: Request, query: ClusterListingRequest):
-
+async def get_cluster_list(request: Request, query: ClusterListingRequest) -> ClusterListResponse:
     service = cluster_service.ClusterService()
 
     return await service.get_cluster_list(limit=query.limit, offset=query.offset, filter_by=query.filter_by)
