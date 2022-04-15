@@ -7,7 +7,6 @@ from diting.core.base.message import QueryRequestBase, PaginationRequestBase, De
 class ClusterCreatingRequest(CreateRequestBase):
     name: Optional[str]
     desc: Optional[str]
-    alived: Optional[bool]
     type: Optional[str]
     cpu_value: Optional[int]
     memory_value: Optional[int]
@@ -31,4 +30,5 @@ class ClusterGetingRequest(QueryRequestBase):
     pass
 
 class ClusterListingRequest(PaginationRequestBase):
+    # 这里补充filter_by 参数
     pass

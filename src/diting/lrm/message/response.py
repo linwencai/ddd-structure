@@ -22,6 +22,7 @@ class ClusterResponse(ResponseBase):
     harbor_url: str
     harbor_secret: str
 
+@dataclass
 class ClusterListResponse(ResponseBase):
     data: List[ClusterResponse]
     

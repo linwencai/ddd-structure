@@ -1,7 +1,7 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from diting.core.base.model import ModelBase
-from typing import Optional
+from typing import Optional, List
 
 class RepositoryBase:
     def __init__(self, session: AsyncSession, metamodel: Optional[ModelBase]=None):
@@ -15,6 +15,12 @@ class RepositoryBase:
         stmt = select(self.metamodel).filter_by(id=id)
         model = (await self.session.execute(stmt)).scalars().first()
         return model
+
+    async def list(self, limit: int, offset: int, filter_by: dict) -> List[ModelBase]:
+        stmt = select(self.metamodel).filter_by(**filter_by).limit(limit).offset(offset)
+        model_list = (await self.session.execute(stmt)).scalars().all()
+
+        return model_list
 
     async def add(self, model: ModelBase) -> ModelBase:
         self.session.add(model)

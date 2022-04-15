@@ -65,19 +65,17 @@ async def get_cluster(request: Request, query: ClusterGetingRequest):
 
 
 
-# @bp.get("/cluster/list")
-# @openapi.definition(
-#     parameter=Parameter("get_cluster_list", ClusterListingRequest, required=True),
-#     summary="获取多个 cluster",
-#     tag="cluster",
-#     response=[Response(Wrap(ClusterListResponse), status=200)],
-# )
-# async def get_cluster_list(request: Request, parameter: ClusterListingRequest = ClusterListingRequest()) -> HTTPResponse:
-#     if parameter is None:
-#         parameter = ClusterListingRequest()
-#     app_service = cluster_appserv.ClusterAppService()
-#     cluster_response = await app_service.get_cluster_list(parameter)
-#     if cluster_response:
-#         return json(cluster_response.to_json())
-#     else:
-#         return json({})
+@bp.get("/cluster/list")
+@openapi.definition(
+    parameter=Parameter("get_cluster_list", ClusterListingRequest, required=True),
+    summary="获取 cluster 列表",
+    tag="cluster",
+    response=[Response(Wrap(ClusterListResponse), status=200)],
+)
+@validate(query=ClusterListingRequest)
+@serializer(message)
+async def get_cluster_list(request: Request, query: ClusterListingRequest):
+
+    service = cluster_service.ClusterService()
+
+    return await service.get_cluster_list(limit=query.limit, offset=query.offset, filter_by=query.filter_by)
