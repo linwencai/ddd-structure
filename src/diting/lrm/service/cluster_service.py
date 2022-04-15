@@ -3,6 +3,7 @@ from diting.lrm.adapter.model_repository import ClusterRepository
 from diting.lrm.message.request import ClusterGetingRequest, ClusterCreatingRequest, ClusterUpdatingRequest, ClusterListingRequest
 from diting.lrm.domain.cluster_model import ClusterModel
 from diting.lrm.message.response import ClusterResponse
+from sanic import exceptions
 
 class ClusterService(ServiceBase):
     def __init__(self):
@@ -18,6 +19,9 @@ class ClusterService(ServiceBase):
 
     async def get_cluster_by_id(self, id: str):
         cluster_model =  await self.cluster_repository.get(id)
+
+        if cluster_model is None:
+            raise exceptions.NotFound(f"cluster {id} not found")
 
         return ClusterResponse.from_domain(cluster_model)
  

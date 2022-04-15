@@ -8,21 +8,21 @@ def format_exception(exception: Exception):
     return traceback.format_exception(type(exception), exception, exception.__traceback__)
 
 @app.exception(exceptions.NotFound)
-async def not_fount(request: Request, exception: exceptions.SanicException):
+async def not_found(request: Request, exception: exceptions.SanicException):
     """
     自定义 404 返回值
     :param request:
     :param exception:
     :return:
     """
-    logger.warning(f"not_fount request=%s exception=%s", request, exception)
+    logger.warning(f"not_found request=%s exception=%s", request, exception)
     status_code = 404
     return json(
         {
             "code": status_code,
             "detail": format_exception(exception),
             "data": {},
-            "msg": "not found",
+            "msg": "resource not found",
         },
         status_code
     )

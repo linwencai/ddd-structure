@@ -1,8 +1,9 @@
 from sanic import Blueprint
 from sanic import Request
-from sanic_ext import openapi, validate, serializer
+from sanic_ext import openapi, serializer
 from sanic_ext.extensions.openapi.definitions import RequestBody, Response, Parameter
 
+from diting.core.common.validation import validate
 from diting.core.common.log import app_logger as logger
 from diting.core.common.openapi import openapi_response_wrapper as Wrap
 from diting.core.common.serializer import message
@@ -55,11 +56,12 @@ async def create_cluster(request: Request, body: ClusterCreatingRequest):
     tag="cluster",
     response=[Response(Wrap(ClusterResponse), status=200)],
 )
+@validate(query=ClusterGetingRequest)
 @serializer(message)
-async def get_cluster(request: Request):
+async def get_cluster(request: Request, query: ClusterGetingRequest):
     service = cluster_service.ClusterService()
-    cluster_id = request.args.get("id")
-    return await service.get_cluster_by_id(cluster_id)
+
+    return await service.get_cluster_by_id(query.id)
 
 
 

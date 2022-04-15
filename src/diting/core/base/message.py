@@ -6,9 +6,8 @@ from diting.core.base.model import DataclassBase
 class RequestBase(pydantic.BaseModel):
     pass
 
-
 class QueryRequestBase(RequestBase):
-    id : Union[str, int]
+    id : str
 
 class PaginationRequestBase(RequestBase):
     page_num: int
@@ -22,8 +21,6 @@ class UpdateRequestBase(RequestBase):
 
 class CreateRequestBase(RequestBase):
     pass
-
-
 
 # ------------------- Response Message ---------------
 @dataclass
