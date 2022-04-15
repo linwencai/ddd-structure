@@ -9,7 +9,7 @@ import sys
 TESTS_FOLDER_DIR = os.path.dirname(os.path.abspath(__file__))
 FATHER_DIR = os.path.dirname(TESTS_FOLDER_DIR)
 
-PROJECT_DIR = os.path.join(FATHER_DIR, "/src")
+PROJECT_DIR = os.path.join(FATHER_DIR, "src")
 
 # 将项目工程加入到import 检索路径中
 sys.path.insert(0, PROJECT_DIR)
@@ -17,3 +17,5 @@ sys.path.insert(0, PROJECT_DIR)
 print(f"tests folder dir is {TESTS_FOLDER_DIR}")
 print(f"father folder dir is {FATHER_DIR}")
 print(f"prject folder dir is {PROJECT_DIR}")
+
+os.chdir(PROJECT_DIR)

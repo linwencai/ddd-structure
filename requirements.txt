@@ -12,3 +12,5 @@ aiomysql
 aiosqlite
 alembic
 apscheduler
+pytest
+sanic-testing

@@ -1,5 +1,7 @@
 from sqlalchemy import Column, Integer, String, TIMESTAMP, Boolean, text, func, Text, Table
 from diting.core.base.table import metadata_obj
+from diting.lrm.domain.cluster_model import ClusterModel
+from diting.core.base.table import mapper_registry
 
 
 cluster_table = Table(
@@ -20,3 +22,6 @@ cluster_table = Table(
     Column("harbor_url", String(128), default="", comment="harbor url"),
     Column("harbor_secret", String(64), default="", comment="harbor secret")
 )
+
+
+mapper_registry.map_imperatively(ClusterModel, cluster_table)

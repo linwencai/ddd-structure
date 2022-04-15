@@ -49,12 +49,3 @@ async def close_session(request, response):
     if hasattr(request.ctx, "orm_session_ctx_token"):
         base_model_session_ctx.reset(request.ctx.orm_session_ctx_token)
         await request.ctx.orm_session.close()
-
-# ----------------------------------------------------------- #
-@app.after_server_start
-async def setup_orm_mapper(app: Sanic, _) -> None:
-    from diting.lrm.domain.cluster_model import ClusterModel
-    from diting.core.base.table import mapper_registry
-    from diting.lrm.adapter.table_schema import cluster_table
-
-    mapper_registry.map_imperatively(ClusterModel, cluster_table)
